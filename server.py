@@ -473,18 +473,17 @@ def compute_standings(teams: list[dict], matches: list[dict]) -> list[dict]:
         tbl.sort(key=lambda r: (-r["points"], -r["goal_difference"], -r["goals_for"], r["team_name"]))
         for i, r in enumerate(tbl, 1):
             r["position"] = i
-            if locked and i <= 2:
+            if i <= 2:
                 r["qualified"] = True; r["qualification_type"] = "direct"
-            elif locked and i == 3:
+            elif i == 3:
                 thirds.append(r)
         standings.append(dict(group=gn, rows=tbl))
-    if locked:
-        thirds.sort(key=lambda r: (-r["points"], -r["goal_difference"], -r["goals_for"], r["team_name"]))
-        best = {r["team_id"] for r in thirds[:2]}
-        for s in standings:
-            for r in s["rows"]:
-                if r["team_id"] in best:
-                    r["qualified"] = True; r["qualification_type"] = "best_third"
+    thirds.sort(key=lambda r: (-r["points"], -r["goal_difference"], -r["goals_for"], r["team_name"]))
+    best = {r["team_id"] for r in thirds[:2]}
+    for s in standings:
+        for r in s["rows"]:
+            if r["team_id"] in best:
+                r["qualified"] = True; r["qualification_type"] = "best_third"
     standings.sort(key=lambda s: s["group"])
     return standings
 
