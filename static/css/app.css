@@ -24,7 +24,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;height:100%}
 body{
-    margin:0;height:100%;overflow:hidden;
+    margin:0;
     background:
         linear-gradient(180deg,rgba(22,18,16,.62) 0%,rgba(36,24,20,.52) 24%,rgba(245,240,234,.74) 100%),
         radial-gradient(circle at top right,rgba(255,176,80,.14),transparent 18%),
@@ -45,7 +45,7 @@ img{max-width:100%;height:auto}
 .skip-link:focus{transform:translateY(0)}
 :focus-visible{outline:3px solid var(--info);outline-offset:3px}
 
-.shell{display:flex;flex-direction:column;min-height:100%;width:min(1240px,calc(100% - 24px));margin:0 auto;padding:18px 0 0;position:relative;overflow-y:auto}
+.shell{display:flex;flex-direction:column;min-height:100vh;width:min(1240px,calc(100% - 24px));margin:0 auto;padding:18px 0 0;position:relative}
 .shell::before{content:"";position:fixed;inset:0;background:
     linear-gradient(180deg,rgba(255,248,242,.08),rgba(255,248,242,.02)),
     radial-gradient(circle at 12% 12%,rgba(255,166,77,.09),transparent 18%),
