@@ -141,7 +141,7 @@ img{max-width:100%;height:auto}
 .fixture-row__side{color:var(--muted);font-size:.95rem}
 
 /* team logos */
-.team-logo{width:22px;height:22px;object-fit:contain;flex-shrink:0;vertical-align:middle}
+.team-logo{width:26px;height:26px;object-fit:contain;flex-shrink:0;vertical-align:middle}
 .fixture-row--completed{border-left:4px solid var(--ok)}
 
 .match-card{padding:16px;border:2px solid var(--line-soft);border-radius:20px;background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04);text-align:left;color:var(--text);cursor:pointer}
