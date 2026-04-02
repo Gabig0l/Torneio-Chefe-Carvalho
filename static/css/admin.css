@@ -99,7 +99,7 @@ button[type="submit"]:hover,.form-actions button:first-child:hover{background:va
 .toast{position:fixed;right:12px;bottom:12px;max-width:360px;padding:12px 14px;border-radius:16px;background:rgba(22,33,45,.98);color:#fff;opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .18s ease,transform .18s ease}
 .toast.is-visible{opacity:1;transform:translateY(0)}
 
-.is-hidden{display:none}
+.is-hidden{display:none!important}
 
 /* ── responsive ────────────────────────────────────────────────────────── */
 @media (min-width:960px){

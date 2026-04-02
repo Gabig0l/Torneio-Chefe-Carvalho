@@ -53,6 +53,7 @@ async function api(path, opts={}) {
 
 /* ── auth state ────────────────────────────────────────────────────────── */
 function setAuth(ok, user) {
+    $("#admin-header")?.classList.toggle("is-hidden", !ok);
     loginView.classList.toggle("is-hidden", ok);
     adminView.classList.toggle("is-hidden", !ok);
     sessionBadge.textContent = ok ? `Ligado: ${user}` : "Não autenticado";
