@@ -69,7 +69,7 @@ function arrowNav(e, list, setter, key) {
 function sorted(matches) { return [...matches].sort((a,b) => (Number(a.game_number||9999)-Number(b.game_number||9999)) || String(a.scheduled_at||"").localeCompare(String(b.scheduled_at||""))); }
 function groupBy(matches) {
     const m = new Map();
-    matches.forEach(g => { const l = g.phase_label || g.phase_title || "Jogos"; if (!m.has(l)) m.set(l,[]); m.get(l).push(g); });
+    matches.forEach(g => { const l = g.phase_title || g.phase_label || "Jogos"; if (!m.has(l)) m.set(l,[]); m.get(l).push(g); });
     return [...m.entries()].map(([label,items]) => ({label,items}));
 }
 function filtered() {
@@ -103,7 +103,7 @@ function fixtureRow(m, done) {
     return `<button class="fixture-row ${done?"fixture-row--completed":""}" type="button" data-mid="${m.id}">
         <div class="fixture-row__main">
             <div class="fixture-row__top"><span class="fixture-row__label">${esc(m.game_label||`Jogo ${m.game_number||"-"}`)}</span>${done?`<strong class="fixture-row__result">${esc(sc(m.home_score))} - ${esc(sc(m.away_score))}</strong>`:statusChip(m.status)}</div>
-            <div class="fixture-row__phase">${esc(m.phase_label||m.phase_title)}</div>
+            <div class="fixture-row__phase">${esc(m.phase_title||m.phase_label)}</div>
             <div class="fixture-row__teams"><span class="fixture-row__team">${esc(teamName(m.home_team))}</span><span class="fixture-row__team">${esc(teamName(m.away_team))}</span></div>
         </div>
         <div class="fixture-row__side"><strong>${esc(fmtDT(m.scheduled_at))}</strong><span>${esc(m.venue||"Local por definir")}</span></div>
