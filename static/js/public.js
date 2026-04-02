@@ -39,9 +39,9 @@ function statusMeta(s) {
 }
 function evLabel(t) { return {goal:"Golo",yellow_card:"Cartão amarelo",red_card:"Cartão vermelho",note:"Nota"}[t] || t || "Evento"; }
 function teamName(t) { return t?.name || "A definir"; }
-const LOGOS={"B.V. Porto":"Porto","B.V. Santa Marta De Penaguião":"Santa Marta de Penaguião","B.V. Flavienses":"Flavienses","B.V. Castelo De Paiva":"Castelo_de_Paiva","B.V. Resende":"Resende","B.V. Vidago":"vidago","B.V. Alijó":"Alijó","B.V. Montalegre":"Montalegre","B.V. Mondim De Basto":"Mondim_de_Basto","B.V. Provezende":"Provesende","B.V. Entre Os Rios":"Entre_os_rios","B.V. Amarante":"Amarante"};
-function teamLogo(t){const n=t?.name;if(!n||!LOGOS[n])return'';return`<img class="team-logo" src="/static/assets/logos_coorporações/${encodeURIComponent(LOGOS[n])}.png" alt="" loading="lazy">`;}
-function teamLogoByName(name){if(!name||!LOGOS[name])return'';return`<img class="team-logo" src="/static/assets/logos_coorporações/${encodeURIComponent(LOGOS[name])}.png" alt="" loading="lazy">`;}
+const LOGOS={"B.V. Porto":"Porto","B.V. Santa Marta De Penaguião":"Santa_Marta_de_Penaguiao","B.V. Flavienses":"Flavienses","B.V. Castelo De Paiva":"Castelo_de_Paiva","B.V. Resende":"Resende","B.V. Vidago":"vidago","B.V. Alijó":"Alijo","B.V. Montalegre":"Montalegre","B.V. Mondim De Basto":"Mondim_de_Basto","B.V. Provezende":"Provesende","B.V. Entre Os Rios":"Entre_os_rios","B.V. Amarante":"Amarante"};
+function teamLogo(t){const n=t?.name;if(!n||!LOGOS[n])return'';return`<img class="team-logo" src="/static/assets/team_logos/${LOGOS[n]}.png" alt="" loading="lazy">`;}
+function teamLogoByName(name){if(!name||!LOGOS[name])return'';return`<img class="team-logo" src="/static/assets/team_logos/${LOGOS[name]}.png" alt="" loading="lazy">`;}
 function sc(v) { return v === null || v === undefined || v === "" ? "-" : String(v); }
 function statusChip(s) { const m = statusMeta(s); return `<span class="status-chip status-${s||"scheduled"}"><span aria-hidden="true">${esc(m.icon)}</span><span>${esc(m.label)}</span></span>`; }
 
