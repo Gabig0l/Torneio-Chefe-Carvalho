@@ -106,13 +106,12 @@ function renderList(targetId, items, fmt, empty) {
 function renderLists() {
     const e=entities();
 
-    renderList("teams-list", e.teams, t => `<article class="record-card"><div class="key-line"><strong>${esc(t.name)}</strong><span>Grupo ${esc(normGroup(t.group_name))}</span></div>${t.coach?`<p>Treinador: ${esc(t.coach)}</p>`:""}<div class="record-actions"><button type="button" data-edit="team-form" data-col="teams" data-id="${t.id}">Editar</button><button type="button" class="danger" data-del="teams" data-id="${t.id}">Remover</button></div></article>`, "Sem equipas registadas.");
+    renderList("teams-list", e.teams, t => `<article class="record-card"><div class="key-line"><strong>${esc(t.name)}</strong><span>Grupo ${esc(normGroup(t.group_name))}</span></div><div class="record-actions"><button type="button" data-edit="team-form" data-col="teams" data-id="${t.id}">Editar</button><button type="button" class="danger" data-del="teams" data-id="${t.id}">Remover</button></div></article>`, "Sem equipas registadas.");
 
     renderList("players-list", e.players, p => `<article class="record-card"><div class="key-line"><strong>${esc(p.name)}</strong><span>${esc(p.team_name||"Sem equipa")}</span></div><p>${p.shirt_number?`#${esc(p.shirt_number)}`:""}${p.position?` ${esc(p.position)}`:""}</p><div class="record-actions"><button type="button" data-edit="player-form" data-col="players" data-id="${p.id}">Editar</button><button type="button" class="danger" data-del="players" data-id="${p.id}">Remover</button></div></article>`, "Sem jogadores registados.");
 
     renderList("matches-list", e.matches, m => {
-        const sc = m.status==="completed"||m.status==="live" ? `${m.home_score??0} - ${m.away_score??0}` : "";
-        return `<article class="record-card"><div class="key-line"><strong>${esc(m.game_label||`Jogo ${m.game_number}`)}</strong><span>${esc(m.phase_title)} &middot; ${esc(statusLabel(m.status))}</span></div><p>${esc(m.home_team?.name||"A definir")} ${sc?`<strong>${esc(sc)}</strong>`:"vs"} ${esc(m.away_team?.name||"A definir")}</p><p>${esc(fmtDT(m.scheduled_at))}</p><div class="record-actions"><button type="button" data-edit="match-form" data-col="matches" data-id="${m.id}">Editar</button><button type="button" class="danger" data-del="matches" data-id="${m.id}">Remover</button></div></article>`;
+        return `<article class="record-card"><div class="key-line"><strong>${esc(m.game_label||`Jogo ${m.game_number}`)}</strong><span>${esc(m.phase_title)} &middot; ${esc(statusLabel(m.status))}</span></div><p>${esc(m.home_team?.name||"A definir")} vs ${esc(m.away_team?.name||"A definir")}</p><p>${esc(fmtDT(m.scheduled_at))}</p><div class="record-actions"><button type="button" data-edit="match-form" data-col="matches" data-id="${m.id}">Editar</button><button type="button" class="danger" data-del="matches" data-id="${m.id}">Remover</button></div></article>`;
     }, "Sem jogos registados.");
 
     renderList("events-list", e.match_events, ev => {
