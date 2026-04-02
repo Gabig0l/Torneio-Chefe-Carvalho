@@ -22,9 +22,9 @@
 }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;height:100%}
 body{
-    margin:0;
+    margin:0;min-height:100%;
     background:
         linear-gradient(180deg,rgba(22,18,16,.62) 0%,rgba(36,24,20,.52) 24%,rgba(245,240,234,.74) 100%),
         radial-gradient(circle at top right,rgba(255,176,80,.14),transparent 18%),
@@ -45,7 +45,7 @@ img{max-width:100%;height:auto}
 .skip-link:focus{transform:translateY(0)}
 :focus-visible{outline:3px solid var(--info);outline-offset:3px}
 
-.shell{width:min(1240px,calc(100% - 24px));margin:0 auto;padding:18px 0 40px;position:relative}
+.shell{display:flex;flex-direction:column;min-height:100vh;width:min(1240px,calc(100% - 24px));margin:0 auto;padding:18px 0 0;position:relative}
 .shell::before{content:"";position:fixed;inset:0;background:
     linear-gradient(180deg,rgba(255,248,242,.08),rgba(255,248,242,.02)),
     radial-gradient(circle at 12% 12%,rgba(255,166,77,.09),transparent 18%),
@@ -83,7 +83,7 @@ img{max-width:100%;height:auto}
 .kicker{margin:0 0 8px;font-size:.875rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:inherit}
 
 /* ── content / tabs ───────────────────────────────────────────────────── */
-.content{display:grid;gap:18px;margin-top:18px}
+.content{display:grid;gap:18px;margin-top:18px;flex:1}
 
 .tabs{position:sticky;top:12px;z-index:10;padding:6px;border:1px solid rgba(226,201,189,.72);border-radius:var(--radius);
     background:rgba(255,249,244,.68)!important;backdrop-filter:blur(14px) saturate(1.05);box-shadow:var(--shadow)}
@@ -287,7 +287,7 @@ img{max-width:100%;height:auto}
 .md-event__min{text-align:center;font-size:.82rem;font-weight:700;white-space:nowrap;min-width:56px}
 
 /* ── footer ────────────────────────────────────────────────────────────── */
-.footer{padding:28px 0;text-align:center}
+.footer{padding:16px 0;text-align:center;margin-top:auto}
 .footer__staff{color:rgba(100,60,40,.18);font-weight:700;text-decoration:none;font-size:.92rem;border-radius:999px;padding:6px 14px}
 .footer__staff:hover,.footer__staff:focus-visible{color:rgba(100,60,40,.52);background:rgba(139,37,28,.06)}
 
