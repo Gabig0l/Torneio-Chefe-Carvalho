@@ -217,21 +217,34 @@ function activateShortcut(id) {
 async function boot() {
     try {
         const s=await api("/api/auth/session",{method:"GET"});
-        if(s.authenticated) await refreshAdmin();
+        if(s.authenticated) {
+            if(window.location.pathname==="/staff-login") {
+                window.location.replace("/admin");
+                return;
+            }
+            await refreshAdmin();
+        }
         else { clearUI(); setAuth(false); }
     } catch(_) { clearUI(); setAuth(false); }
 }
 
 loginForm.addEventListener("submit", async e => {
     e.preventDefault();
-    try { await api("/api/auth/login",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(loginForm).entries()))}); await refreshAdmin(); showToast("Sessão iniciada."); }
+    try {
+        await api("/api/auth/login",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(loginForm).entries()))});
+        window.location.replace("/admin");
+    }
     catch(err) { showToast(err.message,true); }
 });
 
 logoutBtn.addEventListener("click", async () => {
     let ok=false;
     try { await api("/api/auth/logout",{method:"POST"}); ok=true; } catch(e) { showToast(e.message,true); }
-    finally { clearUI(); setAuth(false); if(ok) showToast("Sessão terminada."); }
+    finally {
+        clearUI();
+        setAuth(false);
+        if(ok) window.location.replace("/staff-login");
+    }
 });
 
 evMatch.addEventListener("change", () => syncEvTeams(evMatch.value,"",""));

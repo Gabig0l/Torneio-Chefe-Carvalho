@@ -606,6 +606,12 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _redirect(self, location: str, status: int = 303):
+        self.send_response(status)
+        self.send_header("Location", location)
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+
     def _static(self, rel: str):
         fp = (STATIC_DIR / rel).resolve()
         if not fp.is_file() or STATIC_DIR not in fp.parents:
@@ -774,7 +780,21 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         p = urlparse(self.path).path
         if p == "/": self._html("index.html"); return
-        if p == "/admin": self._html("admin.html"); return
+        if p == "/staff-login":
+            if self._session():
+                self._redirect("/admin")
+            else:
+                self._html("admin.html")
+            return
+        if p == "/admin":
+            if self._session():
+                self._html("admin.html")
+            else:
+                self._redirect("/staff-login")
+            return
+        if p == "/static/admin.html":
+            self._redirect("/staff-login")
+            return
         if p.startswith("/static/"): self._static(p.removeprefix("/static/")); return
         if p == "/api/public/bootstrap":
             with get_db() as conn: self._json(public_payload(conn)); return
