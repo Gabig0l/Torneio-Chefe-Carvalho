@@ -135,7 +135,7 @@ function renderMatches() {
 function renderGroupStandings() {
     $("#group-standings").innerHTML = state.data.standings.map(g => `
         <article class="standing-card">
-            <div class="standing-card__header"><div><span class="standing-kicker">Fase de grupos</span><h3>${esc(g.group)}</h3></div><span class="standing-note">Top 2 + 2 melhores 3.ºs</span></div>
+            <div class="standing-card__header"><div><span class="standing-kicker">Fase de grupos</span><h3>${esc(g.group)}</h3></div></div>
             <div class="table-wrap"><table class="standings-table"><caption class="sr-only">Tabela do ${esc(g.group)}</caption>
                 <thead><tr><th>#</th><th>Equipa</th><th>PJ</th><th>V</th><th>E</th><th>D</th><th>GM</th><th>GS</th><th>DG</th><th>P</th></tr></thead>
                 <tbody>${g.rows.map((r,i) => `<tr class="${r.qualified?`qualified-row ${r.qualification_type==="best_third"?"qualified-row--best-third":""}`:""}">`+
