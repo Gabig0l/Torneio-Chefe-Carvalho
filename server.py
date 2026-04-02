@@ -576,6 +576,12 @@ class Handler(SimpleHTTPRequestHandler):
     def _reset_fails(self):
         _login_attempts.pop(self._ip(), None)
 
+    def _cookie_flags(self) -> str:
+        """Return Secure flag only when behind HTTPS proxy."""
+        proto = (self.headers.get("X-Forwarded-Proto") or "").lower()
+        secure = "; Secure" if proto == "https" else ""
+        return f"; HttpOnly{secure}; Path=/; SameSite=Lax"
+
     def _body_json(self) -> dict:
         n = int(self.headers.get("Content-Length", "0"))
         if n <= 0:
@@ -804,7 +810,7 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Content-Length", str(len(resp)))
-            self.send_header("Set-Cookie", f"{SESSION_COOKIE}={tk}; HttpOnly; Secure; Path=/; SameSite=Lax; Max-Age={SESSION_TTL_HOURS*3600}")
+            self.send_header("Set-Cookie", f"{SESSION_COOKIE}={tk}{self._cookie_flags()}; Max-Age={SESSION_TTL_HOURS*3600}")
             self.end_headers()
             self.wfile.write(resp); return
         if p == "/api/auth/logout":
@@ -816,7 +822,7 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Content-Length", str(len(resp)))
-            self.send_header("Set-Cookie", f"{SESSION_COOKIE}=deleted; HttpOnly; Secure; Path=/; SameSite=Lax; Max-Age=0")
+            self.send_header("Set-Cookie", f"{SESSION_COOKIE}=deleted{self._cookie_flags()}; Max-Age=0")
             self.end_headers()
             self.wfile.write(resp); return
         if p.startswith("/api/admin/"):

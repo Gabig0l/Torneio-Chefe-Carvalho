@@ -66,7 +66,7 @@ img{max-width:100%;height:auto}
 .hero__ember--two{bottom:-14px;left:40%;width:130px;height:72px;background:radial-gradient(circle,rgba(255,94,58,.48),rgba(255,94,58,0))}
 
 .hero__top{position:relative;z-index:1;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 14px}
-.hero__main{position:relative;z-index:1;display:grid;gap:20px;align-items:center;width:min(980px,100%);justify-self:start;grid-template-columns:minmax(112px,170px) minmax(0,1fr)}
+.hero__main{position:relative;z-index:1;display:grid;gap:32px;align-items:center;width:min(980px,100%);justify-self:start;grid-template-columns:minmax(112px,170px) minmax(0,1fr)}
 .hero__body{display:grid;gap:12px;align-content:start;justify-self:start;text-align:left;max-width:46rem}
 
 .hero h1{margin:0;max-width:none;font-size:clamp(2.05rem,5vw,3rem);line-height:.98}
