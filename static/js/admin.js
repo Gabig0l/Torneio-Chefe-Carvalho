@@ -61,7 +61,7 @@ function setAuth(ok, user) {
 
 function clearUI() {
     state.payload = null;
-    managedForms.forEach(id => { const f=document.getElementById(id); if(f){f.reset(); const h=f.querySelector("[name='id']"); if(h) h.value="";} });
+    managedForms.forEach(id => { const f=document.getElementById(id); if(f){f.reset(); const h=f.querySelector("[name='record_id']"); if(h) h.value="";} });
     managedTargets.forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML=""; });
     $$("#admin-view details").forEach(d => d.open=false);
     if(evTeam) evTeam.innerHTML='<option value="">Selecionar equipa</option>';
@@ -79,11 +79,15 @@ function popSelect(selId, items, fmt, blank="Selecionar") {
 function fillForm(formId, rec) {
     const f=document.getElementById(formId); if(!f||!rec) return;
     if(formId==="event-form") syncEvTeams(rec.match_id, rec.team_id, rec.player_id);
-    for(const el of f.elements) { if(!el.name) continue; el.value=rec[el.name]??""; }
+    for(const el of f.elements) {
+        if(!el.name) continue;
+        if(el.name==="record_id") { el.value=rec.id??""; continue; }
+        el.value=rec[el.name]??"";
+    }
 }
 function resetForm(formId) {
     const f=document.getElementById(formId); if(!f) return;
-    f.reset(); const h=f.querySelector("[name='id']"); if(h) h.value="";
+    f.reset(); const h=f.querySelector("[name='record_id']"); if(h) h.value="";
     if(formId==="event-form") syncEvTeams("","","");
 }
 
@@ -159,6 +163,7 @@ async function refreshAdmin() {
 
 function formToPayload(form) {
     const p=Object.fromEntries(new FormData(form).entries());
+    if("record_id" in p) { p.id=p.record_id; delete p.record_id; }
     if(p.id==="") delete p.id;
     return p;
 }
