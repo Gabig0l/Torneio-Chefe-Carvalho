@@ -365,8 +365,8 @@ def seed_database(conn: sqlite3.Connection) -> None:
     ])
 
     conn.executemany("INSERT INTO info_sections (id,category,title,content,emphasis,sort_order) VALUES (?,?,?,?,?,?)", [
-        (1,"Evento","Data e horário","De 3 para 4 de abril, em formato 24h.","Abertura oficial às 18:00 de sexta-feira.",1),
-        (2,"Formato","Formato","Três grupos. Passam os dois primeiros de cada grupo e os dois melhores terceiros para os quartos de final.","Quartos com oito apurados: vencedores dos grupos, segundos classificados e os dois melhores 3.ºs.",2),
+        (1,"Evento","Data e horário","De 3 para 4 de abril, em formato 24h.","Abertura oficial às 14:00 de sexta-feira.",1),
+        (2,"Formato","Formato","Três grupos. Passam os dois primeiros de cada grupo e os dois melhores terceiros para os quartos de final.","",2),
         (3,"Fase Final","Caminho para a final","Quartos de final com oito equipas apuradas a partir dos grupos. Meias-finais: J23 vencedor J19 vs vencedor J21 e J24 vencedor J20 vs vencedor J22.","Final: vencedor J23 vs vencedor J24. Jogo de 3.º e 4.º lugar: derrotado J23 vs derrotado J24.",3),
         (4,"Contactos","Contactos oficiais da organização","Kosta 919884744 | Falim 919816302 | Corporação dos Bombeiros de Fontes 254810200.","Usar estes contactos para dúvidas operacionais.",4),
         (5,"Prémios","Prémios oficiais","1.º, 2.º, 3.º, 4.º, melhor marcador, fair play, melhor GR, equipa mais distante, MVP Final, MVP 3.º/4.º e taça bar.","Melhor marcador, fair play e melhor GR fecham no fim da fase de grupos.",5),
