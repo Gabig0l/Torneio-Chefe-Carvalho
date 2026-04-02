@@ -119,7 +119,7 @@ function bindMatchBtns() { $$("[data-mid]").forEach(b => b.addEventListener("cli
 function renderMatches() {
     const f = filtered();
     const live = f.filter(m => m.status === "live");
-    const up = f.filter(m => ["scheduled","postponed","suspended"].includes(m.status));
+    const up = f.filter(m => ["scheduled","postponed","suspended"].includes(m.status)).sort((a,b) => String(a.scheduled_at||"").localeCompare(String(b.scheduled_at||"")));
     const done = [...f.filter(m => m.status === "completed")].reverse();
 
     $("#live-pill").textContent = live.length;
