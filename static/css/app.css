@@ -99,8 +99,11 @@ img{max-width:100%;height:auto}
 
 .section-header{display:flex;flex-direction:column;gap:12px}
 .section-header h2{margin:0}
+.panel[data-panel="jogos"] .kicker{color:#fff;font-weight:800;text-shadow:0 2px 10px rgba(0,0,0,.35)}
+.panel[data-panel="jogos"] .section-header h2{color:#fff;font-weight:900;text-shadow:0 3px 14px rgba(0,0,0,.42)}
 .section-tools{display:grid;gap:8px}
 .search-label{font-weight:700}
+.panel[data-panel="jogos"] .search-label{color:#fff;font-weight:800;text-shadow:0 2px 10px rgba(0,0,0,.35)}
 .search-input{width:100%;min-height:48px;padding:0 14px;border:2px solid var(--line-soft);border-radius:16px;background:rgba(255,251,247,.58)!important;backdrop-filter:blur(10px) saturate(1.02);color:var(--text)}
 .chip-row{display:flex;flex-wrap:wrap;gap:10px}
 .chip{min-height:48px;padding:0 12px;border:2px solid transparent;border-radius:18px;background:rgba(255,250,246,.34);color:var(--muted);font-weight:700;cursor:pointer}
