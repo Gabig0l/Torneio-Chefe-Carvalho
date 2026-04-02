@@ -259,7 +259,7 @@ def seed_database(conn: sqlite3.Connection) -> None:
     """, (
         "I Torneio Chefe Carvalho",
         "Torneio de Futsal 24h",
-        "2026-04-03T18:00", "2026-04-04T18:00",
+        "2026-04-03T14:00", "2026-04-04T15:00",
         "Pavilhão Municipal de Santa Marta de Penaguião",
         "Santa Marta de Penaguião",
         "Secção Desportiva da A.H. Bombeiros Voluntários de Fontes",
