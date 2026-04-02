@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#8b251c">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>I Torneio Chefe Carvalho</title>
+    <script>
+        (function(){try{var t=localStorage.getItem("torneio-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}})();
+    </script>
+    <link rel="stylesheet" href="/static/css/app.css?v=3">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Saltar para o conteúdo principal</a>
+    <div class="shell">
+        <header class="hero" role="banner">
+            <div class="hero__ember hero__ember--one" aria-hidden="true"></div>
+            <div class="hero__ember hero__ember--two" aria-hidden="true"></div>
+            <div class="hero__top">
+                <h1 id="event-name">I Torneio Chefe Carvalho</h1>
+                <div class="hero__actions">
+                    <button id="theme-toggle" class="ghost-btn" type="button">Modo escuro/claro</button>
+                    <button id="refresh-btn" class="ghost-btn" type="button">Atualizar</button>
+                </div>
+            </div>
+            <div class="hero__main">
+                <div class="hero__crest-wrap">
+                    <img class="hero__crest" src="/static/assets/logotipo.png?v=3" alt="Logotipo da Secção Desportiva e Cultural A.H.B.V. Fontes">
+                </div>
+                <div class="hero__body">
+                    <p id="event-subtitle" class="hero__subtitle">A carregar evento...</p>
+                    <p class="hero__support">Resultados, classificações, avisos e bar num único ponto de acesso para equipas e público ;)</p>
+                </div>
+            </div>
+        </header>
+
+        <main id="main-content" class="content">
+            <nav class="tabs" aria-label="Secções principais">
+                <div class="tabs__list" role="tablist">
+                    <button class="tab is-active" id="tab-jogos" data-tab="jogos" role="tab" aria-selected="true" aria-controls="p-jogos">Jogos</button>
+                    <button class="tab" id="tab-class" data-tab="class" role="tab" aria-selected="false" aria-controls="p-class">Classificações</button>
+                    <button class="tab" id="tab-bar" data-tab="bar" role="tab" aria-selected="false" aria-controls="p-bar">Bar</button>
+                    <button class="tab" id="tab-avisos" data-tab="avisos" role="tab" aria-selected="false" aria-controls="p-avisos">Avisos</button>
+                    <button class="tab" id="tab-info" data-tab="info" role="tab" aria-selected="false" aria-controls="p-info">Info</button>
+                </div>
+            </nav>
+
+            <!-- JOGOS -->
+            <section class="panel is-active" id="p-jogos" data-panel="jogos" role="tabpanel" aria-labelledby="tab-jogos">
+                <div class="section-header">
+                    <div><p class="kicker">Acompanhamento</p><h2>Jogos e resultados</h2></div>
+                    <div class="section-tools">
+                        <label class="search-label" for="match-search">Pesquisar equipa, fase ou jogo</label>
+                        <input id="match-search" class="search-input" type="search" placeholder="Pesquisar jogo ou equipa" autocomplete="off">
+                    </div>
+                </div>
+                <div class="chip-row" role="group" aria-label="Filtrar jogos">
+                    <button class="chip is-active" data-filter="all" type="button" aria-pressed="true">Todos</button>
+                    <button class="chip" data-filter="live" type="button" aria-pressed="false">A decorrer</button>
+                    <button class="chip" data-filter="scheduled" type="button" aria-pressed="false">Agendados</button>
+                    <button class="chip" data-filter="completed" type="button" aria-pressed="false">Terminados</button>
+                    <button class="chip" data-filter="knockout" type="button" aria-pressed="false">Fase final</button>
+                </div>
+                <section class="card live-zone" aria-labelledby="live-title">
+                    <div class="card__head"><h3 id="live-title">A decorrer</h3><span id="live-pill" class="pill">0</span></div>
+                    <div id="live-matches" class="live-grid" aria-live="polite"></div>
+                </section>
+                <div class="match-board">
+                    <section class="card" aria-labelledby="up-title">
+                        <div class="card__head"><h3 id="up-title">Próximos jogos</h3><span id="up-pill" class="pill">0</span></div>
+                        <div id="upcoming-matches" class="fixture-groups" aria-live="polite"></div>
+                    </section>
+                    <section class="card" aria-labelledby="done-title">
+                        <div class="card__head"><h3 id="done-title">Jogos terminados</h3><span id="done-pill" class="pill">0</span></div>
+                        <div id="completed-matches" class="fixture-groups" aria-live="polite"></div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- CLASSIFICAÇÕES -->
+            <section class="panel" id="p-class" data-panel="class" role="tabpanel" aria-labelledby="tab-class">
+                <div class="section-header"><div><p class="kicker">Painel competitivo</p><h2>Classificações e marcadores</h2></div></div>
+                <div class="subtabs" role="tablist" aria-label="Sub-secções">
+                    <button class="subtab is-active" id="st-groups" data-st="groups" role="tab" aria-selected="true" aria-controls="sp-groups">Fase de grupos</button>
+                    <button class="subtab" id="st-knockout" data-st="knockout" role="tab" aria-selected="false" aria-controls="sp-knockout">Fase final</button>
+                    <button class="subtab" id="st-scorers" data-st="scorers" role="tab" aria-selected="false" aria-controls="sp-scorers">Melhores marcadores</button>
+                </div>
+                <section class="subpanel is-active" id="sp-groups" data-sp="groups" role="tabpanel" aria-labelledby="st-groups">
+                    <div id="group-standings" aria-live="polite"></div>
+                </section>
+                <section class="subpanel" id="sp-knockout" data-sp="knockout" role="tabpanel" aria-labelledby="st-knockout">
+                    <div id="knockout-overview" aria-live="polite"></div>
+                </section>
+                <section class="subpanel" id="sp-scorers" data-sp="scorers" role="tabpanel" aria-labelledby="st-scorers">
+                    <div class="card"><h3>Ranking de golos</h3><div id="top-scorers" class="table-wrap" aria-live="polite"></div></div>
+                </section>
+            </section>
+
+            <!-- BAR -->
+            <section class="panel" id="p-bar" data-panel="bar" role="tabpanel" aria-labelledby="tab-bar">
+                <div class="section-header"><div><p class="kicker">Consumos</p><h2>Bar</h2></div></div>
+                <div id="bar-products" class="bar-grid" aria-live="polite"></div>
+                <section class="card bar-fun" aria-labelledby="bar-fun-title">
+                    <div class="card__head card__head--compact"><div><p class="kicker">Animação no bar</p><h3 id="bar-fun-title">Desafios para o público</h3></div></div>
+                    <div class="bar-fun__grid">
+                        <article class="promo-card">
+                            <img class="promo-card__img" src="/static/assets/jogo-do-prego.jpeg" alt="Jogo do Prego">
+                            <div class="promo-card__body"><h4>Jogo do Prego</h4><p>Desafio rápido no bar para animar a noite. Ideal para grupos entre jogos.</p></div>
+                        </article>
+                        <article class="promo-card">
+                            <img class="promo-card__img" src="/static/assets/beer-pong.jpeg" alt="Beer Pong">
+                            <div class="promo-card__body"><h4>Beer Pong</h4><p>Espaço de convívio para equipas e público com um desafio mais descontraído.</p></div>
+                        </article>
+                    </div>
+                </section>
+            </section>
+
+            <!-- AVISOS -->
+            <section class="panel" id="p-avisos" data-panel="avisos" role="tabpanel" aria-labelledby="tab-avisos">
+                <div class="section-header"><div><p class="kicker">Comunicação</p><h2>Avisos</h2></div></div>
+                <div id="announcements" class="announcement-list" aria-live="polite"></div>
+            </section>
+
+            <!-- INFO -->
+            <section class="panel" id="p-info" data-panel="info" role="tabpanel" aria-labelledby="tab-info">
+                <div class="section-header"><div><p class="kicker">Útil</p><h2>Informações gerais</h2></div></div>
+                <div class="dual-grid">
+                    <article class="card prose-card"><h3>Sobre o torneio</h3><div id="settings-info" aria-live="polite"></div></article>
+                    <div id="info-sections" class="info-grid" aria-live="polite"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer"><a class="footer__staff" href="/admin">staff</a></footer>
+    </div>
+
+    <div id="match-modal" class="modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal__backdrop" data-close-modal></div>
+        <div class="modal__panel">
+            <button class="modal__close" type="button" data-close-modal aria-label="Fechar">Fechar</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    <script src="/static/js/public.js?v=3"></script>
+</body>
+</html>

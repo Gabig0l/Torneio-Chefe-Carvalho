@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+storage/tournament.db
+storage/tournament.db-shm
+storage/tournament.db-wal
+storage/.probe
+.env
+debug.log
+test_api.py
