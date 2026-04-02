@@ -73,8 +73,8 @@ img{max-width:100%;height:auto}
 .hero__subtitle{margin:0;max-width:42rem;color:#f9ece7;font-size:.98rem;line-height:1.45}
 .hero__support{margin:2px 0 0;max-width:44rem;color:#ffe7d9;font-weight:600;font-size:.96rem;line-height:1.5}
 
-.hero__crest-wrap{box-sizing:border-box;width:100%;max-width:190px;padding:10px;border-radius:28px;background:rgba(255,249,243,.16);border:1px solid rgba(255,255,255,.28);box-shadow:0 18px 34px rgba(0,0,0,.22)}
-.hero__crest{display:block;width:100%;object-fit:contain}
+.hero__crest-wrap{width:100%;max-width:220px;padding:0;background:transparent;border:0;box-shadow:none}
+.hero__crest{display:block;width:100%;object-fit:contain;filter:drop-shadow(0 12px 24px rgba(0,0,0,.22))}
 
 .hero__actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-start}
 .ghost-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.38);background:rgba(255,255,255,.12);color:#fff;font-weight:700;font-size:.96rem;cursor:pointer;text-decoration:none}
@@ -328,8 +328,8 @@ img{max-width:100%;height:auto}
     .hero{padding:16px;gap:12px}
     .hero__top{justify-content:flex-start}
     .hero__actions{width:100%}
-    .hero__main{grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:start}
-    .hero__crest-wrap{width:96px;padding:6px;border-radius:18px}
+    .hero__main{grid-template-columns:112px minmax(0,1fr);gap:14px;align-items:start}
+    .hero__crest-wrap{width:112px}
     .hero h1{font-size:clamp(1.8rem,8vw,2.4rem);line-height:1.02}
     .hero__body{gap:8px}
     .hero__subtitle,.hero__support{font-size:.92rem;line-height:1.4}
@@ -359,7 +359,6 @@ img{max-width:100%;height:auto}
     background-attachment:fixed,scroll,scroll,fixed;
 }
 :root[data-theme="dark"] .hero{border-color:rgba(255,255,255,.12);background:linear-gradient(125deg,rgba(44,57,71,.98),rgba(20,28,36,.98))}
-:root[data-theme="dark"] .hero__crest-wrap{background:rgba(255,248,241,.06)}
 :root[data-theme="dark"] .skip-link{background:var(--paper);color:var(--text)}
 
 :root[data-theme="dark"] .tabs{background:rgba(24,19,17,.66)!important;backdrop-filter:blur(16px) saturate(1.05);border-color:rgba(105,74,66,.74)}
