@@ -380,6 +380,10 @@ def init_db() -> None:
     with get_db() as conn:
         conn.executescript(SCHEMA)
         seed_database(conn)
+        # Always ensure admin password is up-to-date
+        un = os.environ.get("ADMIN_USERNAME", "staff")
+        pw = os.environ.get("ADMIN_PASSWORD", "chefe2026")
+        conn.execute("UPDATE admin_users SET password_hash=? WHERE username=?", (hash_pw(pw), un))
 
 # ── Data layer ────────────────────────────────────────────────────────────────
 def fetch_all(conn: sqlite3.Connection) -> dict:
@@ -555,6 +559,8 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header("Content-Security-Policy",
             "default-src 'self'; img-src 'self' data:; "
             "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+            "font-src 'self' https://cdn.jsdelivr.net; "
+            "connect-src 'self'; "
             "script-src 'self' 'unsafe-inline'; object-src 'none'; "
             "base-uri 'self'; form-action 'self'; frame-ancestors 'none'")
         super().end_headers()
