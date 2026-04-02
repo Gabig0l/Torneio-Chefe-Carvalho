@@ -219,11 +219,8 @@ async function boot() {
     try {
         const s=await api("/api/auth/session",{method:"GET"});
         if(s.authenticated) {
-            if(window.location.pathname==="/staff-login") {
-                window.location.replace("/admin");
-                return;
-            }
             await refreshAdmin();
+            if(window.location.pathname==="/staff-login" && history.replaceState) history.replaceState(null,"","/admin");
         }
         else { clearUI(); setAuth(false); }
     } catch(_) { clearUI(); setAuth(false); }
@@ -231,11 +228,15 @@ async function boot() {
 
 loginForm.addEventListener("submit", async e => {
     e.preventDefault();
+    const btn=loginForm.querySelector("[type='submit']");
+    if(btn){btn.disabled=true;btn.textContent="A entrar...";}
     try {
         await api("/api/auth/login",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(loginForm).entries()))});
-        window.location.replace("/admin");
+        await refreshAdmin();
+        if(history.replaceState) history.replaceState(null,"","/admin");
     }
     catch(err) { showToast(err.message,true); }
+    finally { if(btn){btn.disabled=false;btn.textContent="Entrar na área staff";} }
 });
 
 logoutBtn.addEventListener("click", async () => {
