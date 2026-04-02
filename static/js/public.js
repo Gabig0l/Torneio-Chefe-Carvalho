@@ -236,15 +236,69 @@ function trapFocus(e) {
 function openModal(id, trigger) {
     const m = state.data.matches.find(x => x.id === id); if (!m) return;
     state.lastFocus = trigger || document.activeElement;
+
+    const isLive = m.status === "live";
+    const isDone = m.status === "completed";
+    const showScore = isLive || isDone;
+
+    /* split events by team */
+    const homeId = m.home_team_id;
+    const awayId = m.away_team_id;
+    const homeGoals = m.timeline.filter(e => e.event_type === "goal" && e.team_id === homeId);
+    const awayGoals = m.timeline.filter(e => e.event_type === "goal" && e.team_id === awayId);
+
+    function evIcon(t) {
+        if (t === "goal") return "⚽";
+        if (t === "yellow_card") return "🟨";
+        if (t === "red_card") return "🟥";
+        return "📋";
+    }
+    function goalLine(goals) {
+        return goals.map(g => `<span class="md-goal">${esc(g.player_name || "?")} ${g.minute != null ? `<em>${g.minute}'</em>` : ""}</span>`).join("");
+    }
+
+    /* timeline rows — Flashscore style: home events left, away events right */
+    const timeline = [...m.timeline].sort((a,b) => (a.minute ?? 999) - (b.minute ?? 999));
+    const timelineHtml = timeline.length ? timeline.map(ev => {
+        const isHome = ev.team_id === homeId;
+        return `<div class="md-event ${isHome ? "md-event--home" : "md-event--away"}">
+            ${isHome ? `<span class="md-event__text">${esc(ev.player_name || ev.team_name || "?")} <em>${esc(evLabel(ev.event_type))}</em></span>` : '<span class="md-event__text"></span>'}
+            <span class="md-event__min">${evIcon(ev.event_type)} ${ev.minute != null ? ev.minute + "'" : ""}</span>
+            ${!isHome ? `<span class="md-event__text">${esc(ev.player_name || ev.team_name || "?")} <em>${esc(evLabel(ev.event_type))}</em></span>` : '<span class="md-event__text"></span>'}
+        </div>`;
+    }).join("") : '<div class="empty-state">Sem eventos registados.</div>';
+
     modalBody.innerHTML = `
-        <span class="kicker-inline">${esc(m.game_label||`Jogo ${m.game_number||"-"}`)} — ${esc(m.phase_title)}</span>
-        <h2 id="modal-title">${esc(teamName(m.home_team))} vs ${esc(teamName(m.away_team))}</h2>
-        <p id="modal-description" class="modal-copy">${esc(fmtDT(m.scheduled_at))} — ${esc(m.venue||"Local por definir")}</p>
-        <div class="modal-line">${statusChip(m.status)}<strong>${esc(m.referees||"Árbitros por definir")}</strong></div>
-        <div class="match-card__row"><span class="team-name">${esc(teamName(m.home_team))}</span><span class="score">${esc(sc(m.home_score))}</span></div>
-        <div class="match-card__row"><span class="team-name">${esc(teamName(m.away_team))}</span><span class="score">${esc(sc(m.away_score))}</span></div>
-        <h3>Eventos</h3>
-        ${m.timeline.length?`<ul class="timeline-list">${m.timeline.map(t => `<li>${esc(t.minute??"-")}' — ${esc(evLabel(t.event_type))} — ${esc(t.player_name||t.team_name||"Organização")}</li>`).join("")}</ul>`:'<div class="empty-state">Sem eventos registados.</div>'}`;
+        <div class="md-header">
+            <span class="kicker-inline">${esc(m.game_label || `Jogo ${m.game_number || "-"}`)} — ${esc(m.phase_title)}</span>
+            ${statusChip(m.status)}
+        </div>
+
+        <div class="md-scoreboard ${isLive ? "md-scoreboard--live" : ""}">
+            <div class="md-team md-team--home">
+                <strong>${esc(teamName(m.home_team))}</strong>
+                <div class="md-goalscorers">${goalLine(homeGoals)}</div>
+            </div>
+            <div class="md-score">
+                <span class="md-score__value">${showScore ? esc(sc(m.home_score)) : "-"}</span>
+                <span class="md-score__sep">:</span>
+                <span class="md-score__value">${showScore ? esc(sc(m.away_score)) : "-"}</span>
+            </div>
+            <div class="md-team md-team--away">
+                <strong>${esc(teamName(m.away_team))}</strong>
+                <div class="md-goalscorers">${goalLine(awayGoals)}</div>
+            </div>
+        </div>
+
+        <div class="md-info">
+            <span>📅 ${esc(fmtDT(m.scheduled_at))}</span>
+        </div>
+
+        <div class="md-section">
+            <h3 class="md-section__title">Cronologia do jogo</h3>
+            <div class="md-timeline">${timelineHtml}</div>
+        </div>`;
+
     modal.classList.remove("is-hidden");
     trapHandler = e => { if (e.key === "Escape") { closeModal(); return; } trapFocus(e); };
     document.addEventListener("keydown", trapHandler);
