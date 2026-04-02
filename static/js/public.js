@@ -39,6 +39,9 @@ function statusMeta(s) {
 }
 function evLabel(t) { return {goal:"Golo",yellow_card:"Cartão amarelo",red_card:"Cartão vermelho",note:"Nota"}[t] || t || "Evento"; }
 function teamName(t) { return t?.name || "A definir"; }
+const LOGOS={"B.V. Porto":"Porto","B.V. Santa Marta De Penaguião":"Santa Marta de Penaguião","B.V. Flavienses":"Flavienses","B.V. Castelo De Paiva":"Castelo_de_Paiva","B.V. Resende":"Resende","B.V. Vidago":"vidago","B.V. Alijó":"Alijó","B.V. Montalegre":"Montalegre","B.V. Mondim De Basto":"Mondim_de_Basto","B.V. Provezende":"Provesende","B.V. Entre Os Rios":"Entre_os_rios","B.V. Amarante":"Amarante"};
+function teamLogo(t){const n=t?.name;if(!n||!LOGOS[n])return'';return`<img class="team-logo" src="/static/assets/logos_coorporações/${encodeURIComponent(LOGOS[n])}.png" alt="" loading="lazy">`;}
+function teamLogoByName(name){if(!name||!LOGOS[name])return'';return`<img class="team-logo" src="/static/assets/logos_coorporações/${encodeURIComponent(LOGOS[name])}.png" alt="" loading="lazy">`;}
 function sc(v) { return v === null || v === undefined || v === "" ? "-" : String(v); }
 function statusChip(s) { const m = statusMeta(s); return `<span class="status-chip status-${s||"scheduled"}"><span aria-hidden="true">${esc(m.icon)}</span><span>${esc(m.label)}</span></span>`; }
 
@@ -94,8 +97,8 @@ function liveCard(m) {
     return `<button class="match-card match-card--live match-card--spotlight" type="button" data-mid="${m.id}">
         <div class="match-card__meta"><span>${esc(m.game_label||`Jogo ${m.game_number||"-"}`)}</span>${statusChip(m.status)}</div>
         <div class="fixture-row__phase">${esc(m.phase_label||m.phase_title)}</div>
-        <div class="match-card__row"><span class="team-name">${esc(teamName(m.home_team))}</span><span class="score">${esc(sc(m.home_score))}</span></div>
-        <div class="match-card__row"><span class="team-name">${esc(teamName(m.away_team))}</span><span class="score">${esc(sc(m.away_score))}</span></div>
+        <div class="match-card__row"><span class="team-name">${teamLogo(m.home_team)}${esc(teamName(m.home_team))}</span><span class="score">${esc(sc(m.home_score))}</span></div>
+        <div class="match-card__row"><span class="team-name">${teamLogo(m.away_team)}${esc(teamName(m.away_team))}</span><span class="score">${esc(sc(m.away_score))}</span></div>
         <p class="status-description">${esc(fmtDT(m.scheduled_at))} — ${esc(m.venue||"Local por definir")}</p>
     </button>`;
 }
@@ -104,7 +107,7 @@ function fixtureRow(m, done) {
         <div class="fixture-row__main">
             <div class="fixture-row__top"><span class="fixture-row__label">${esc(m.game_label||`Jogo ${m.game_number||"-"}`)}</span>${done?`<strong class="fixture-row__result">${esc(sc(m.home_score))} - ${esc(sc(m.away_score))}</strong>`:statusChip(m.status)}</div>
             <div class="fixture-row__phase">${esc(m.phase_title||m.phase_label)}</div>
-            <div class="fixture-row__teams"><span class="fixture-row__team">${esc(teamName(m.home_team))}</span><span class="fixture-row__team">${esc(teamName(m.away_team))}</span></div>
+            <div class="fixture-row__teams"><span class="fixture-row__team">${teamLogo(m.home_team)}${esc(teamName(m.home_team))}</span><span class="fixture-row__team">${teamLogo(m.away_team)}${esc(teamName(m.away_team))}</span></div>
         </div>
         <div class="fixture-row__side"><strong>${esc(fmtDT(m.scheduled_at))}</strong><span>${esc(m.venue||"Local por definir")}</span></div>
     </button>`;
@@ -139,7 +142,7 @@ function renderGroupStandings() {
             <div class="table-wrap"><table class="standings-table"><caption class="sr-only">Tabela do ${esc(g.group)}</caption>
                 <thead><tr><th>#</th><th>Equipa</th><th>PJ</th><th>V</th><th>E</th><th>D</th><th>GM</th><th>GS</th><th>DG</th><th>P</th></tr></thead>
                 <tbody>${g.rows.map((r,i) => `<tr class="${r.qualified?`qualified-row ${r.qualification_type==="best_third"?"qualified-row--best-third":""}`:""}">`+
-                    `<td><span class="position-badge">${i+1}</span></td><td class="team-cell">${esc(r.team_name)}</td>`+
+                    `<td><span class="position-badge">${i+1}</span></td><td class="team-cell">${teamLogoByName(r.team_name)}${esc(r.team_name)}</td>`+
                     `<td>${r.played}</td><td>${r.won}</td><td>${r.drawn}</td><td>${r.lost}</td>`+
                     `<td>${r.goals_for}</td><td>${r.goals_against}</td><td>${r.goal_difference}</td><td><strong>${r.points}</strong></td></tr>`).join("")}
                 </tbody></table></div>
@@ -156,8 +159,8 @@ function renderKnockout() {
     const mc = m => `<article class="mini-bracket__match">
         <div class="mini-bracket__meta"><span>${esc(m.game_label||`Jogo ${m.game_number||"-"}`)}</span>${statusChip(m.status)}</div>
         <div class="mini-bracket__teams">
-            <div class="mini-bracket__team"><span>${esc(teamName(m.home_team))}</span><strong>${esc(sc(m.home_score))}</strong></div>
-            <div class="mini-bracket__team"><span>${esc(teamName(m.away_team))}</span><strong>${esc(sc(m.away_score))}</strong></div>
+            <div class="mini-bracket__team"><span>${teamLogo(m.home_team)}${esc(teamName(m.home_team))}</span><strong>${esc(sc(m.home_score))}</strong></div>
+            <div class="mini-bracket__team"><span>${teamLogo(m.away_team)}${esc(teamName(m.away_team))}</span><strong>${esc(sc(m.away_score))}</strong></div>
         </div>
         <p class="status-description">${esc(fmtDT(m.scheduled_at))} | ${esc(m.venue||"Local por definir")}</p>
     </article>`;
@@ -275,7 +278,7 @@ function openModal(id, trigger) {
 
         <div class="md-scoreboard ${isLive ? "md-scoreboard--live" : ""}">
             <div class="md-team md-team--home">
-                <strong>${esc(teamName(m.home_team))}</strong>
+                <strong>${teamLogo(m.home_team)}${esc(teamName(m.home_team))}</strong>
                 <div class="md-goalscorers">${goalLine(homeGoals)}</div>
             </div>
             <div class="md-score">
@@ -284,7 +287,7 @@ function openModal(id, trigger) {
                 <span class="md-score__value">${showScore ? esc(sc(m.away_score)) : "-"}</span>
             </div>
             <div class="md-team md-team--away">
-                <strong>${esc(teamName(m.away_team))}</strong>
+                <strong>${teamLogo(m.away_team)}${esc(teamName(m.away_team))}</strong>
                 <div class="md-goalscorers">${goalLine(awayGoals)}</div>
             </div>
         </div>
