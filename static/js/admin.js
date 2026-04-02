@@ -171,16 +171,19 @@ function validate(formId, p) {
 async function saveForm(e) {
     const form=e.currentTarget||e.target.closest("form");
     if(!form) { showToast("Formulário não encontrado.",true); return; }
+    console.log(`[saveForm] form="${form.id}"`, formToPayload(form));
     const p=formToPayload(form);
-    for(const f of form.querySelectorAll("[required]")) { if(!f.value||!f.value.trim()) { f.focus(); showToast(`O campo "${f.closest("label")?.querySelector("span")?.textContent||f.name}" é obrigatório.`,true); return; } }
+    for(const f of form.querySelectorAll("[required]")) { if(!f.value||!f.value.trim()) { console.warn(`[saveForm] campo obrigatório vazio: ${f.name}`); f.focus(); showToast(`O campo "${f.closest("label")?.querySelector("span")?.textContent||f.name}" é obrigatório.`,true); return; } }
     validate(form.id, p);
     const id=p.id; delete p.id;
     const map={"team-form":"teams","player-form":"players","match-form":"matches","event-form":"match-events","bar-form":"bar-products","announcement-form":"announcements","info-form":"info-sections"};
     const res=map[form.id]; if(!res) { showToast("Recurso desconhecido.",true); return; }
     const btn=form.querySelector("[type='submit']");
     if(btn) { btn.disabled=true; btn.textContent="A guardar..."; }
+    console.log(`[saveForm] a enviar ${id?"PUT":"POST"} /api/admin/${res}${id?"/"+id:""}`);
     try {
         await api(id?`/api/admin/${res}/${id}`:`/api/admin/${res}`, {method:id?"PUT":"POST", body:JSON.stringify(p)});
+        console.log("[saveForm] sucesso");
         resetForm(form.id);
         await refreshAdmin();
         showToast("Alterações guardadas.");
@@ -236,11 +239,18 @@ $$(".admin-shortcuts a[href^='#']").forEach(a => { a.addEventListener("click", e
 $$("[data-reset-form]").forEach(b => { b.addEventListener("click", () => { resetForm(b.dataset.resetForm); showToast("Formulário limpo."); }); });
 
 managedForms.forEach(id => {
-    const f=document.getElementById(id); if(!f) return;
+    const f=document.getElementById(id);
+    if(!f) { console.warn(`[admin] form #${id} não encontrado`); return; }
     const btn=f.querySelector("[type='submit']");
     if(btn) btn.dataset.origText=btn.textContent;
-    f.addEventListener("submit", e => { e.preventDefault(); saveForm(e).catch(err => { console.error(`[saveForm ${id}]`,err); showToast(err.message,true); }); });
+    f.addEventListener("submit", e => {
+        e.preventDefault();
+        console.log(`[admin] submit disparado: ${id}`);
+        saveForm(e).catch(err => { console.error(`[saveForm ${id}]`,err); showToast(err.message,true); });
+    });
+    console.log(`[admin] listener registado: ${id}`);
 });
 
+console.log("[admin] admin.js v4 carregado");
 applyTheme(localStorage.getItem(THEME_KEY)||preferredTheme());
 boot();
