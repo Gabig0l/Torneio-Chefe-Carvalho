@@ -18,6 +18,8 @@ const themeBtn = $("#theme-toggle");
 const evMatch = $("#event-match");
 const evTeam = $("#event-team");
 const evPlayer = $("#event-player");
+const barCategorySelect = document.querySelector('#bar-form select[name="category"]');
+const barCategoryDefaults = ["Menu Quartel","Bar 24h","Menu da Noite","Bebidas com Álcool","Bebidas sem Álcool"];
 
 /* ── helpers ──────────────────────────────────────────────────────────── */
 function esc(v) { return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
@@ -75,6 +77,21 @@ function byId(col, id) { return (entities()[col]||[]).find(x => Number(x.id)===N
 function popSelect(selId, items, fmt, blank="Selecionar") {
     const sel=document.getElementById(selId); if(!sel) return;
     sel.innerHTML = `<option value="">${blank}</option>` + items.map(i => `<option value="${i.id}">${esc(fmt(i))}</option>`).join("");
+}
+
+function populateBarCategories(selectedValue="") {
+    if(!barCategorySelect) return;
+    const liveCategories = [...new Set((entities().bar_products||[])
+        .map(i => String(i.category||"").trim())
+        .filter(Boolean))];
+    const extraCategories = liveCategories
+        .filter(category => !barCategoryDefaults.includes(category))
+        .sort((a,b) => a.localeCompare(b, "pt-PT"));
+    const categories = [...barCategoryDefaults, ...extraCategories];
+    barCategorySelect.innerHTML = `<option value="">Selecionar</option>` + categories
+        .map(category => `<option value="${esc(category)}">${esc(category)}</option>`)
+        .join("");
+    if(selectedValue) barCategorySelect.value = String(selectedValue);
 }
 
 function fillForm(formId, rec) {
@@ -135,6 +152,7 @@ function populateSelects() {
     popSelect("match-home", e.teams, i=>i.name, "Selecionar equipa");
     popSelect("match-away", e.teams, i=>i.name, "Selecionar equipa");
     popSelect("event-match", sortedMatches(), i=>`${i.game_label||`Jogo ${i.game_number}`} — ${i.home_team?.name||"A definir"} vs ${i.away_team?.name||"A definir"}`, "Selecionar jogo");
+    populateBarCategories(barCategorySelect?.value || "");
     syncEvTeams(evMatch.value, evTeam.value, evPlayer.value);
 }
 
