@@ -244,6 +244,8 @@ img{max-width:100%;height:auto}
     background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04);padding:20px}
 .prose-card h3{margin:0 0 12px}
 .prose-card p,.info-card p,.announcement-card p,.status-description{color:var(--muted);line-height:1.6}
+.info-list{margin:0;padding-left:22px;color:var(--muted);line-height:1.6}
+.info-list li + li{margin-top:4px}
 .info-grid{display:grid;gap:16px;grid-template-columns:1fr}
 .info-card{border:2px solid rgba(223,198,186,.72)!important;border-radius:22px;
     background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04);padding:16px}

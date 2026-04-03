@@ -217,13 +217,21 @@ function renderAnnouncements() {
 
 function renderInfo() {
     const s = state.data.settings;
+    function infoContent(i) {
+        if (i.title !== "Prémios") return `<p>${esc(i.content)}</p>`;
+        const items = String(i.content || "")
+            .split(",")
+            .map(x => x.trim())
+            .filter(Boolean);
+        return `<ul class="info-list">${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    }
     $("#settings-info").innerHTML = `
         <p><strong>Data:</strong> ${esc(fmtDate(s.start_at))} até ${esc(fmtDate(s.end_at))}</p>
         <p><strong>Local:</strong> ${esc(s.venue||"Por definir")} — ${esc(s.city||"Por definir")}</p>
         <p><strong>Organização:</strong> ${esc(s.organizer||"Por definir")}</p>
         <p><strong>Contactos:</strong> ${esc(s.contacts||"Por definir")}</p>`;
     $("#info-sections").innerHTML = state.data.info_sections.map(i => `
-        <article class="info-card"><h3>${esc(i.title)}</h3><p>${esc(i.content)}</p>${i.emphasis?`<p class="status-description">${esc(i.emphasis)}</p>`:""}</article>`).join("");
+        <article class="info-card"><h3>${esc(i.title)}</h3>${infoContent(i)}${i.emphasis?`<p class="status-description">${esc(i.emphasis)}</p>`:""}</article>`).join("");
 }
 
 /* ── modal ─────────────────────────────────────────────────────────────── */
