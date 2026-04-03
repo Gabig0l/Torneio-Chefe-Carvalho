@@ -95,6 +95,13 @@ button[type="submit"]:hover,.form-actions button:first-child:hover{background:va
 .cluster-header--priority .eyebrow{color:var(--brand)}
 .cluster-copy{color:var(--muted);font-size:.92rem}
 
+/* ── footer ────────────────────────────────────────────────────────────── */
+.admin-footer{display:grid;gap:4px;justify-items:center;margin-top:24px;padding:4px 12px 0;text-align:center}
+.admin-footer__signature{display:grid;gap:4px;max-width:760px}
+.admin-footer__legal,.admin-footer__credit{margin:0}
+.admin-footer__legal{color:rgba(72,45,33,.86);font-weight:800;font-size:.92rem;letter-spacing:.01em}
+.admin-footer__credit{color:rgba(72,45,33,.64);font-size:.84rem}
+
 /* ── toast ─────────────────────────────────────────────────────────────── */
 .toast{position:fixed;right:12px;bottom:12px;max-width:360px;padding:12px 14px;border-radius:16px;background:rgba(22,33,45,.98);color:#fff;opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity .18s ease,transform .18s ease}
 .toast.is-visible{opacity:1;transform:translateY(0)}
@@ -123,3 +130,5 @@ button[type="submit"]:hover,.form-actions button:first-child:hover{background:va
 :root[data-theme="dark"] .skip-link{background:var(--surface);color:var(--text)}
 :root[data-theme="dark"] .admin-cluster{background:rgba(21,33,44,.92)}
 :root[data-theme="dark"] .admin-cluster--priority{background:linear-gradient(180deg,rgba(21,33,44,.98),rgba(21,33,44,.92))}
+:root[data-theme="dark"] .admin-footer__legal{color:rgba(255,233,225,.84)}
+:root[data-theme="dark"] .admin-footer__credit{color:rgba(255,220,210,.6)}
