@@ -90,7 +90,6 @@ function filtered() {
 function renderSummary() {
     const s = state.data.settings;
     $("#event-name").textContent = s.name;
-    $("#event-subtitle").textContent = `${s.slogan} — ${fmtDate(s.start_at)} até ${fmtDate(s.end_at)}`;
 }
 
 function liveCard(m) {
