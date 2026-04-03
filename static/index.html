@@ -10,7 +10,7 @@
     <script>
         (function(){try{var t=localStorage.getItem("torneio-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}})();
     </script>
-    <link rel="stylesheet" href="/static/css/app.css?v=31">
+    <link rel="stylesheet" href="/static/css/app.css?v=32">
 </head>
 <body>
     <a class="skip-link" href="#main-content">Saltar para o conteúdo principal</a>
@@ -128,7 +128,13 @@
             </section>
         </main>
 
-        <footer class="footer"><a class="footer__staff" href="/staff-login">staff</a></footer>
+        <footer class="footer">
+            <div class="footer__signature">
+                <p class="footer__legal">&copy; 2026 Gabriel Conceição · B.V. Fontes. Todos os direitos reservados.</p>
+                <p class="footer__credit">Criação, desenvolvimento e identidade digital da plataforma oficial do torneio.</p>
+            </div>
+            <a class="footer__staff" href="/staff-login">staff</a>
+        </footer>
     </div>
 
     <div id="match-modal" class="modal is-hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
