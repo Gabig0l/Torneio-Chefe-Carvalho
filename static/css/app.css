@@ -182,12 +182,13 @@ img{max-width:100%;height:auto}
 
 .table-wrap{overflow-x:auto;background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04)}
 .standings-table{width:100%;border-collapse:collapse}
-.standings-table th,.standings-table td{padding:12px 10px;border-bottom:1px solid var(--line-soft);text-align:left}
+.standings-table th,.standings-table td{padding:12px 10px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:middle}
 .standings-table thead th{background:rgba(255,251,247,.58)!important;backdrop-filter:blur(10px) saturate(1.02);color:var(--muted);font-size:.88rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
 .standings-table td:last-child,.standings-table th:last-child{text-align:right}
 
 .position-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;min-height:34px;padding:0 8px;border-radius:12px;background:#215d9a;color:#fff;font-weight:800}
-.team-cell{font-weight:800;display:flex;align-items:center;gap:8px}
+.team-cell{font-weight:800}
+.team-cell__inner{display:inline-flex;align-items:center;gap:10px;min-width:0}
 .qualified-row td{background:rgba(21,93,59,.08)}
 .qualified-row .position-badge{background:var(--ok)}
 

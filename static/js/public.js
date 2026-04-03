@@ -142,7 +142,7 @@ function renderGroupStandings() {
             <div class="table-wrap"><table class="standings-table"><caption class="sr-only">Tabela do ${esc(g.group)}</caption>
                 <thead><tr><th>#</th><th>Equipa</th><th>PJ</th><th>V</th><th>E</th><th>D</th><th>GM</th><th>GS</th><th>DG</th><th>P</th></tr></thead>
                 <tbody>${g.rows.map((r,i) => `<tr class="${r.qualified?`qualified-row ${r.qualification_type==="best_third"?"qualified-row--best-third":""}`:""}">`+
-                    `<td><span class="position-badge">${i+1}</span></td><td class="team-cell">${teamLogoByName(r.team_name)}${esc(r.team_name)}</td>`+
+                    `<td><span class="position-badge">${i+1}</span></td><td class="team-cell"><span class="team-cell__inner">${teamLogoByName(r.team_name)}${esc(r.team_name)}</span></td>`+
                     `<td>${r.played}</td><td>${r.won}</td><td>${r.drawn}</td><td>${r.lost}</td>`+
                     `<td>${r.goals_for}</td><td>${r.goals_against}</td><td>${r.goal_difference}</td><td><strong>${r.points}</strong></td></tr>`).join("")}
                 </tbody></table></div>
