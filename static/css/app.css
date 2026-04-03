@@ -83,7 +83,7 @@ img{max-width:100%;height:auto}
 .kicker{margin:0 0 8px;font-size:.875rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:inherit}
 
 /* ── content / tabs ───────────────────────────────────────────────────── */
-.content{display:grid;gap:18px;margin-top:18px;flex:1}
+.content{display:flex;flex-direction:column;gap:18px;margin-top:18px;flex:1}
 
 .tabs{position:sticky;top:12px;z-index:10;padding:6px;border:1px solid rgba(226,201,189,.72);border-radius:var(--radius);
     background:rgba(255,249,244,.68)!important;backdrop-filter:blur(14px) saturate(1.05);box-shadow:var(--shadow);align-self:start;height:auto}
