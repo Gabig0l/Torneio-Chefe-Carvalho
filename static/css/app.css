@@ -223,6 +223,7 @@ img{max-width:100%;height:auto}
 
 .bar-fun{gap:18px}
 .bar-fun__grid{display:grid;gap:16px}
+.bar-fun #bar-fun-title{color:#fff}
 .promo-card{overflow:hidden;border:1px solid rgba(223,198,186,.72)!important;border-radius:22px;
     background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04)}
 .promo-card__img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#e9ddd2}
