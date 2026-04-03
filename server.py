@@ -390,10 +390,33 @@ def seed_database(conn: sqlite3.Connection) -> None:
     pw = os.environ.get("ADMIN_PASSWORD", "chefe2026")
     conn.execute("INSERT INTO admin_users (username,password_hash,created_at) VALUES (?,?,?)", (un, hash_pw(pw), now_iso()))
 
+def ensure_bar_products(conn: sqlite3.Connection) -> None:
+    """Add new bar products to existing databases without resetting admin changes."""
+    conn.executemany(
+        "INSERT OR IGNORE INTO bar_products (id,name,category,price,availability,sort_order) VALUES (?,?,?,?,?,?)",
+        [
+            (18,"Fino","Bebidas com Álcool",1.00,"available",30),
+            (19,"Balde Fino","Bebidas com Álcool",2.50,"available",31),
+            (20,"Metro 11 Finos","Bebidas com Álcool",10.00,"available",32),
+            (21,"Metro 15 Finos","Bebidas com Álcool",13.00,"available",33),
+            (22,"Cadeira 20 Finos","Bebidas com Álcool",18.00,"available",34),
+            (23,"Vinho Copo Branco / Tinto","Bebidas com Álcool",1.00,"available",35),
+            (24,"Vinho Garrafa Branco / Tinto","Bebidas com Álcool",4.00,"available",36),
+            (25,"Favaios Simples","Bebidas com Álcool",1.00,"available",37),
+            (26,"Favaios C/ Cerveja","Bebidas com Álcool",1.50,"available",38),
+            (27,"Shot Mariquinhas","Bebidas com Álcool",0.50,"available",39),
+            (28,"Água 0,50L","Bebidas sem Álcool",1.00,"available",40),
+            (29,"Coca Cola","Bebidas sem Álcool",1.50,"available",41),
+            (30,"Ice Tea","Bebidas sem Álcool",1.50,"available",42),
+            (31,"Bebida Energética","Bebidas sem Álcool",2.50,"available",43),
+        ],
+    )
+
 def init_db() -> None:
     with get_db() as conn:
         conn.executescript(SCHEMA)
         seed_database(conn)
+        ensure_bar_products(conn)
         # Always ensure admin password is up-to-date
         un = os.environ.get("ADMIN_USERNAME", "staff")
         pw = os.environ.get("ADMIN_PASSWORD", "chefe2026")
