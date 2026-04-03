@@ -265,7 +265,7 @@ def seed_database(conn: sqlite3.Connection) -> None:
         "Secção Desportiva da A.H. Bombeiros Voluntários de Fontes",
         "Três grupos. Apuram-se os dois primeiros de cada grupo e os dois melhores terceiros para os quartos de final. Melhor marcador, fair play e melhor GR ficam fechados no fim da fase de grupos.",
         "Kosta: 919884744 | Falim: 919816302 | Corporação dos Bombeiros Voluntários de Fontes: 254810200",
-        "Prémios oficiais: 1.º, 2.º, 3.º, 4.º, melhor marcador, fair play, melhor GR, equipa mais distante, MVP Final, MVP 3.º/4.º e taça bar.",
+        "Prémios oficiais: 1.º lugar, 2.º lugar, 3.º lugar, 4.º lugar, Melhor Marcador (Fase de Grupos), Fair play (Fase de Grupos), Melhor Guarda-Redes (Fase de Grupos), Equipa + Distante, MVP da Final, MVP dos 3.º/4.º, Taça Bar ;)",
     ))
 
     teams = [
@@ -369,7 +369,7 @@ def seed_database(conn: sqlite3.Connection) -> None:
         (2,"Formato","Formato","Três grupos. Passam os dois primeiros de cada grupo e os dois melhores terceiros para os quartos de final.","",2),
         (3,"Fase Final","Caminho para a final","Quartos de final com oito equipas apuradas a partir dos grupos. Meias-finais: J23 vencedor J19 vs vencedor J21 e J24 vencedor J20 vs vencedor J22.","Final: vencedor J23 vs vencedor J24. Jogo de 3.º e 4.º lugar: derrotado J23 vs derrotado J24.",3),
         (4,"Contactos","Contactos oficiais da organização","Kosta 919884744 | Falim 919816302 | Corporação dos Bombeiros de Fontes 254810200.","Usar estes contactos para dúvidas operacionais.",4),
-        (5,"Prémios","Prémios oficiais","1.º, 2.º, 3.º, 4.º, melhor marcador, fair play, melhor GR, equipa mais distante, MVP Final, MVP 3.º/4.º e taça bar.","Melhor marcador, fair play e melhor GR fecham no fim da fase de grupos.",5),
+        (5,"Prémios","Prémios oficiais","1.º lugar\n2.º lugar\n3.º lugar\n4.º lugar\nMelhor Marcador (Fase de Grupos)\nFair play (Fase de Grupos)\nMelhor Guarda-Redes (Fase de Grupos)\nEquipa + Distante\nMVP da Final\nMVP dos 3.º/4.º\nTaça Bar ;)","Melhor marcador, fair play e melhor GR fecham no fim da fase de grupos.",5),
     ])
 
     un = os.environ.get("ADMIN_USERNAME", "staff")

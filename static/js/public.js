@@ -220,7 +220,7 @@ function renderInfo() {
     function infoContent(i) {
         if (i.title !== "Prémios") return `<p>${esc(i.content)}</p>`;
         const items = String(i.content || "")
-            .split(",")
+            .split(/\r?\n/)
             .map(x => x.trim())
             .filter(Boolean);
         return `<ul class="info-list">${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
