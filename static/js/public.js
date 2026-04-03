@@ -98,7 +98,7 @@ function liveCard(m) {
         <div class="fixture-row__phase">${esc(m.phase_label||m.phase_title)}</div>
         <div class="match-card__row"><span class="team-name">${teamLogo(m.home_team)}${esc(teamName(m.home_team))}</span><span class="score">${esc(sc(m.home_score))}</span></div>
         <div class="match-card__row"><span class="team-name">${teamLogo(m.away_team)}${esc(teamName(m.away_team))}</span><span class="score">${esc(sc(m.away_score))}</span></div>
-        <p class="status-description">${esc(fmtDT(m.scheduled_at))} — ${esc(m.venue||"Local por definir")}</p>
+        <p class="status-description">${esc(fmtDT(m.scheduled_at))}</p>
     </button>`;
 }
 function fixtureRow(m, done) {
@@ -108,7 +108,7 @@ function fixtureRow(m, done) {
             <div class="fixture-row__phase">${esc(m.phase_title||m.phase_label)}</div>
             <div class="fixture-row__teams"><span class="fixture-row__team">${teamLogo(m.home_team)}${esc(teamName(m.home_team))}</span><span class="fixture-row__team">${teamLogo(m.away_team)}${esc(teamName(m.away_team))}</span></div>
         </div>
-        <div class="fixture-row__side"><strong>${esc(fmtDT(m.scheduled_at))}</strong><span>${esc(m.venue||"Local por definir")}</span></div>
+        <div class="fixture-row__side"><strong>${esc(fmtDT(m.scheduled_at))}</strong></div>
     </button>`;
 }
 function renderGrouped(id, groups, empty, done) {
@@ -161,7 +161,7 @@ function renderKnockout() {
             <div class="mini-bracket__team"><span>${teamLogo(m.home_team)}${esc(teamName(m.home_team))}</span><strong>${esc(sc(m.home_score))}</strong></div>
             <div class="mini-bracket__team"><span>${teamLogo(m.away_team)}${esc(teamName(m.away_team))}</span><strong>${esc(sc(m.away_score))}</strong></div>
         </div>
-        <p class="status-description">${esc(fmtDT(m.scheduled_at))} | ${esc(m.venue||"Local por definir")}</p>
+        <p class="status-description">${esc(fmtDT(m.scheduled_at))}</p>
     </article>`;
 
     const roundHtml = (r, cls, title, id) => `<section class="mini-bracket__round ${cls}" aria-labelledby="${id}">
