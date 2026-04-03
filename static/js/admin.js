@@ -18,13 +18,14 @@ const themeBtn = $("#theme-toggle");
 const evMatch = $("#event-match");
 const evTeam = $("#event-team");
 const evPlayer = $("#event-player");
+const evType = $("#event-form select[name='event_type']");
 const barCategorySelect = document.querySelector('#bar-form select[name="category"]');
 const barCategoryDefaults = ["Menu Quartel","Bar 24h","Menu da Noite","Bebidas com Álcool","Bebidas sem Álcool"];
 
 /* ── helpers ──────────────────────────────────────────────────────────── */
 function esc(v) { return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 function fmtDT(v) { if (!v) return "Sem data"; return new Intl.DateTimeFormat("pt-PT",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(v)); }
-function evLabel(t) { return {goal:"Golo",yellow_card:"Cartão amarelo",red_card:"Cartão vermelho"}[t]||t||"Evento"; }
+function evLabel(t) { return {goal:"Golo",foul:"Falta",yellow_card:"Cartão amarelo",red_card:"Cartão vermelho"}[t]||t||"Evento"; }
 function statusLabel(s) { return {scheduled:"Agendado",live:"Em curso",completed:"Terminado"}[s]||s||"Agendado"; }
 function normGroup(v) { return String(v||"").replace("Grupo ","") || "-"; }
 
@@ -102,6 +103,7 @@ function fillForm(formId, rec) {
         if(el.name==="record_id") { el.value=rec.id??""; continue; }
         el.value=rec[el.name]??"";
     }
+    if(formId==="event-form") syncEvPlayers(f.querySelector("[name='team_id']")?.value, rec.player_id);
 }
 function resetForm(formId) {
     const f=document.getElementById(formId); if(!f) return;
@@ -164,9 +166,18 @@ function syncEvTeams(matchId, selTeam, selPlayer) {
     syncEvPlayers(evTeam.value, selPlayer);
 }
 function syncEvPlayers(teamId, selPlayer) {
+    if(evType?.value === "foul") {
+        evPlayer.innerHTML = '<option value="">Sem jogador</option>';
+        evPlayer.value = "";
+        evPlayer.disabled = true;
+        evPlayer.required = false;
+        return;
+    }
     const players=(entities().players||[]).filter(p=>Number(p.team_id)===Number(teamId));
     evPlayer.innerHTML='<option value="">Selecionar jogador</option>'+players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
     evPlayer.value=selPlayer?String(selPlayer):"";
+    evPlayer.disabled = false;
+    evPlayer.required = true;
 }
 
 /* ── CRUD ──────────────────────────────────────────────────────────────── */
@@ -183,12 +194,13 @@ function formToPayload(form) {
     const p=Object.fromEntries(new FormData(form).entries());
     if("record_id" in p) { p.id=p.record_id; delete p.record_id; }
     if(p.id==="") delete p.id;
+    if(form.id==="event-form" && p.event_type === "foul") delete p.player_id;
     return p;
 }
 
 function validate(formId, p) {
     if(formId==="match-form"&&p.home_team_id&&p.away_team_id&&p.home_team_id===p.away_team_id) throw new Error("Seleciona duas equipas diferentes.");
-    if(formId==="event-form"&&(!p.match_id||!p.team_id||!p.player_id)) throw new Error("Seleciona jogo, equipa e jogador.");
+    if(formId==="event-form"&&(!p.match_id||!p.team_id||(p.event_type !== "foul" && !p.player_id))) throw new Error("Seleciona jogo e equipa; para golos e cartões também jogador.");
 }
 
 async function saveForm(e) {
@@ -268,6 +280,7 @@ logoutBtn.addEventListener("click", async () => {
 
 evMatch.addEventListener("change", () => syncEvTeams(evMatch.value,"",""));
 evTeam.addEventListener("change", () => syncEvPlayers(evTeam.value,""));
+evType?.addEventListener("change", () => syncEvPlayers(evTeam.value, ""));
 evPlayer.addEventListener("change", () => { const p=byId("players",evPlayer.value); if(p) evTeam.value=String(p.team_id); });
 
 themeBtn?.addEventListener("click", toggleTheme);

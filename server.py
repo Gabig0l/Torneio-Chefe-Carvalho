@@ -462,9 +462,13 @@ def enrich_matches(data: dict) -> list[dict]:
         mc["mvp_player"] = pid.get(m["mvp_player_id"])
         mc["timeline"] = evm.get(m["id"], [])
         mc["scorers"] = [x for x in mc["timeline"] if x["event_type"] == "goal"]
+        mc["home_fouls"] = 0
+        mc["away_fouls"] = 0
         if mc["home_team_id"] and mc["away_team_id"]:
             dh = sum(1 for x in mc["scorers"] if x["team_id"] == mc["home_team_id"])
             da = sum(1 for x in mc["scorers"] if x["team_id"] == mc["away_team_id"])
+            mc["home_fouls"] = sum(1 for x in mc["timeline"] if x["event_type"] == "foul" and x["team_id"] == mc["home_team_id"])
+            mc["away_fouls"] = sum(1 for x in mc["timeline"] if x["event_type"] == "foul" and x["team_id"] == mc["away_team_id"])
             if mc["scorers"] or mc["home_score"] is None or mc["away_score"] is None:
                 mc["home_score"] = dh
                 mc["away_score"] = da
@@ -735,6 +739,8 @@ class Handler(SimpleHTTPRequestHandler):
                 vals["venue"] = r["venue"] if r else ""
             if create and "is_featured" not in vals: vals["is_featured"] = 0
         if resource == "match-events":
+            if str(vals.get("event_type") or payload.get("event_type") or "") == "foul":
+                vals["player_id"] = None
             if not vals.get("description"):
                 vals["description"] = self._event_desc(conn, vals)
         if resource == "bar-products":
@@ -762,6 +768,7 @@ class Handler(SimpleHTTPRequestHandler):
         if et == "goal": return f"Golo de {who}."
         if et == "yellow_card": return f"Cartão amarelo para {who}."
         if et == "red_card": return f"Cartão vermelho para {who}."
+        if et == "foul": return f"Falta assinalada a {tn or 'equipa por definir'}."
         return f"Evento registado para {who}."
 
     def _create(self, resource: str, payload: dict):

@@ -37,7 +37,7 @@ function fmtDate(v) { if (!v) return "Por definir"; return new Intl.DateTimeForm
 function statusMeta(s) {
     return { live:{label:"A decorrer",icon:"[LIVE]"}, scheduled:{label:"Agendado",icon:"[AG]"}, completed:{label:"Terminado",icon:"[OK]"}, postponed:{label:"Adiado",icon:"[ADIADO]"}, suspended:{label:"Suspenso",icon:"[STOP]"} }[s] || {label:s||"Estado",icon:"[?]"};
 }
-function evLabel(t) { return {goal:"Golo",yellow_card:"Cartão amarelo",red_card:"Cartão vermelho",note:"Nota"}[t] || t || "Evento"; }
+function evLabel(t) { return {goal:"Golo",foul:"Falta",yellow_card:"Cartão amarelo",red_card:"Cartão vermelho",note:"Nota"}[t] || t || "Evento"; }
 function teamName(t) { return t?.name || "A definir"; }
 const LOGOS={"B.V. Porto":"Porto","B.V. Santa Marta De Penaguião":"Santa_Marta_de_Penaguiao","B.V. Flavienses":"Flavienses","B.V. Castelo De Paiva":"Castelo_de_Paiva","B.V. Resende":"Resende","B.V. Vidago":"vidago","B.V. Alijó":"Alijo","B.V. Montalegre":"Montalegre","B.V. Mondim De Basto":"Mondim_de_Basto","B.V. Provezende":"Provesende","B.V. Entre Os Rios":"Entre_os_rios","B.V. Amarante":"Amarante"};
 function teamLogo(t){const n=t?.name;if(!n||!LOGOS[n])return'';return`<img class="team-logo" src="/static/assets/team_logos/${LOGOS[n]}.png" alt="" loading="lazy">`;}
@@ -255,6 +255,8 @@ function openModal(id, trigger) {
     const awayId = m.away_team_id;
     const homeGoals = m.timeline.filter(e => e.event_type === "goal" && e.team_id === homeId);
     const awayGoals = m.timeline.filter(e => e.event_type === "goal" && e.team_id === awayId);
+    const homeFouls = Number(m.home_fouls ?? m.timeline.filter(e => e.event_type === "foul" && e.team_id === homeId).length);
+    const awayFouls = Number(m.away_fouls ?? m.timeline.filter(e => e.event_type === "foul" && e.team_id === awayId).length);
 
     function evIcon(t) {
         if (t === "goal") return "⚽";
@@ -267,7 +269,9 @@ function openModal(id, trigger) {
     }
 
     /* timeline rows — Flashscore style: home events left, away events right */
-    const timeline = [...m.timeline].sort((a,b) => (a.minute ?? 999) - (b.minute ?? 999));
+    const timeline = [...m.timeline]
+        .filter(ev => ev.event_type !== "foul")
+        .sort((a,b) => (a.minute ?? 999) - (b.minute ?? 999));
     const timelineHtml = timeline.length ? timeline.map(ev => {
         const isHome = ev.team_id === homeId;
         return `<div class="md-event ${isHome ? "md-event--home" : "md-event--away"}">
@@ -275,7 +279,7 @@ function openModal(id, trigger) {
             <span class="md-event__min">${evIcon(ev.event_type)} ${ev.minute != null ? ev.minute + "'" : ""}</span>
             ${!isHome ? `<span class="md-event__text">${esc(ev.player_name || ev.team_name || "?")} <em>${esc(evLabel(ev.event_type))}</em></span>` : '<span class="md-event__text"></span>'}
         </div>`;
-    }).join("") : '<div class="empty-state">Sem eventos registados.</div>';
+    }).join("") : '<div class="empty-state">Sem golos ou cartões registados.</div>';
 
     modalBody.innerHTML = `
         <div class="md-header">
@@ -301,6 +305,11 @@ function openModal(id, trigger) {
 
         <div class="md-info">
             <span>📅 ${esc(fmtDT(m.scheduled_at))}</span>
+        </div>
+
+        <div class="md-stats" aria-label="Faltas por equipa">
+            <div class="md-stat md-stat--home"><span class="md-stat__team">${esc(teamName(m.home_team))}</span><span class="md-stat__label">Faltas</span><strong class="md-stat__value">${homeFouls}</strong></div>
+            <div class="md-stat md-stat--away"><span class="md-stat__team">${esc(teamName(m.away_team))}</span><span class="md-stat__label">Faltas</span><strong class="md-stat__value">${awayFouls}</strong></div>
         </div>
 
         <div class="md-section">
