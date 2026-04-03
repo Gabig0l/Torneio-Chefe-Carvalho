@@ -82,6 +82,10 @@ button[type="submit"]:hover,.form-actions button:first-child:hover{background:va
 .record-actions .danger{border-color:#d9b6b2;color:var(--danger)}
 .key-line{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px}
 .key-line strong{color:var(--text)}
+.player-team-group{display:grid;gap:12px}
+.player-team-group__header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 4px 8px;border-bottom:1px solid var(--line-soft);color:var(--muted)}
+.player-team-group__header strong{color:var(--text);font-size:1rem}
+.player-team-group__list{display:grid;gap:12px}
 
 /* ── shortcuts ─────────────────────────────────────────────────────────── */
 .admin-shortcuts{display:flex;flex-wrap:wrap;gap:10px}
