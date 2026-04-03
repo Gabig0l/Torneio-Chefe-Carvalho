@@ -222,11 +222,11 @@ img{max-width:100%;height:auto}
 .bar-item[data-stock="unavailable"]{background:#f3e1e1!important}
 
 .bar-fun{gap:18px}
-.bar-fun__grid{display:grid;gap:16px}
+.bar-fun__grid{display:flex;justify-content:center;gap:16px}
 .bar-fun #bar-fun-title{color:#fff}
 .promo-card{overflow:hidden;border:1px solid rgba(223,198,186,.72)!important;border-radius:22px;
-    background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04)}
-.promo-card__img{display:block;width:100%;object-fit:contain;border-radius:22px}
+    background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04);width:fit-content;max-width:100%}
+.promo-card__img{display:block;max-width:100%;height:auto;object-fit:contain;border-radius:22px}
 .promo-card__body{display:grid;gap:8px;padding:16px}
 .promo-card__body h4,.promo-card__body p{margin:0}
 .promo-card__body h4{font-size:1.1rem}
