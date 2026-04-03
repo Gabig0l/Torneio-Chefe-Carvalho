@@ -141,7 +141,7 @@ img{max-width:100%;height:auto}
 .fixture-row__side{color:var(--muted);font-size:.95rem}
 
 /* team logos */
-.team-logo{width:30px;height:30px;object-fit:contain;flex-shrink:0;vertical-align:middle}
+.team-logo{width:33px;height:33px;object-fit:contain;flex-shrink:0;vertical-align:middle}
 .fixture-row--completed{border-left:4px solid var(--ok)}
 
 .match-card{padding:16px;border:2px solid var(--line-soft);border-radius:20px;background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04);text-align:left;color:var(--text);cursor:pointer}
@@ -184,13 +184,13 @@ img{max-width:100%;height:auto}
 .standings-table{width:100%;border-collapse:collapse;table-layout:fixed}
 .standings-table th,.standings-table td{padding:10px 8px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:middle}
 .standings-table thead th{background:rgba(255,251,247,.58)!important;backdrop-filter:blur(10px) saturate(1.02);color:var(--muted);font-size:.88rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
-.standings-table th:first-child,.standings-table td:first-child{width:62px}
-.standings-table th:nth-child(2),.standings-table td:nth-child(2){width:34%;padding-left:2px}
+.standings-table th:first-child,.standings-table td:first-child{width:54px;padding-right:4px}
+.standings-table th:nth-child(2),.standings-table td:nth-child(2){width:34%;padding-left:0}
 .standings-table th:nth-child(n+3),.standings-table td:nth-child(n+3){width:6%;text-align:center;white-space:nowrap}
 
 .position-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;min-height:34px;padding:0 8px;border-radius:12px;background:#215d9a;color:#fff;font-weight:800}
 .team-cell{font-weight:800}
-.team-cell__inner{display:inline-flex;align-items:center;gap:6px;min-width:0}
+.team-cell__inner{display:inline-flex;align-items:center;gap:4px;min-width:0}
 .qualified-row td{background:rgba(21,93,59,.08)}
 .qualified-row .position-badge{background:var(--ok)}
 
