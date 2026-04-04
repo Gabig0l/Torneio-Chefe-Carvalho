@@ -15,6 +15,8 @@ const logoutBtn = $("#logout-button");
 const sessionBadge = $("#session-badge");
 const toast = $("#toast");
 const themeBtn = $("#theme-toggle");
+const matchStatus = $("#match-form select[name='status']");
+const matchForfeit = $("#match-form select[name='forfeit_side']");
 const evMatch = $("#event-match");
 const evTeam = $("#event-team");
 const evPlayer = $("#event-player");
@@ -95,6 +97,11 @@ function populateBarCategories(selectedValue="") {
     if(selectedValue) barCategorySelect.value = String(selectedValue);
 }
 
+function syncMatchForfeitState() {
+    if(!matchForfeit || !matchStatus) return;
+    if(matchForfeit.value) matchStatus.value = "completed";
+}
+
 function fillForm(formId, rec) {
     const f=document.getElementById(formId); if(!f||!rec) return;
     if(formId==="event-form") syncEvTeams(rec.match_id, rec.team_id, rec.player_id);
@@ -104,11 +111,13 @@ function fillForm(formId, rec) {
         el.value=rec[el.name]??"";
     }
     if(formId==="event-form") syncEvPlayers(f.querySelector("[name='team_id']")?.value, rec.player_id);
+    if(formId==="match-form") syncMatchForfeitState();
 }
 function resetForm(formId) {
     const f=document.getElementById(formId); if(!f) return;
     f.reset(); const h=f.querySelector("[name='record_id']"); if(h) h.value="";
     if(formId==="event-form") syncEvTeams("","","");
+    if(formId==="match-form") syncMatchForfeitState();
 }
 
 /* ── render ────────────────────────────────────────────────────────────── */
@@ -165,7 +174,7 @@ function renderLists() {
     renderPlayersByTeam(e.players);
 
     renderList("matches-list", e.matches, m => {
-        return `<article class="record-card"><div class="key-line"><strong>${esc(m.game_label||`Jogo ${m.game_number}`)}</strong><span>${esc(m.phase_title)} &middot; ${esc(statusLabel(m.status))}</span></div><p>${esc(m.home_team?.name||"A definir")} vs ${esc(m.away_team?.name||"A definir")}</p><p>${esc(fmtDT(m.scheduled_at))}</p><div class="record-actions"><button type="button" data-edit="match-form" data-col="matches" data-id="${m.id}">Editar</button><button type="button" class="danger" data-del="matches" data-id="${m.id}">Remover</button></div></article>`;
+        return `<article class="record-card"><div class="key-line"><strong>${esc(m.game_label||`Jogo ${m.game_number}`)}</strong><span>${esc(m.phase_title)} &middot; ${esc(statusLabel(m.status))}</span></div><p>${esc(m.home_team?.name||"A definir")} vs ${esc(m.away_team?.name||"A definir")}</p>${m.forfeit_note?`<p>${esc(m.forfeit_note)}</p>`:""}<p>${esc(fmtDT(m.scheduled_at))}</p><div class="record-actions"><button type="button" data-edit="match-form" data-col="matches" data-id="${m.id}">Editar</button><button type="button" class="danger" data-del="matches" data-id="${m.id}">Remover</button></div></article>`;
     }, "Sem jogos registados.");
 
     renderList("events-list", e.match_events, ev => {
@@ -317,6 +326,7 @@ evMatch.addEventListener("change", () => syncEvTeams(evMatch.value,"",""));
 evTeam.addEventListener("change", () => syncEvPlayers(evTeam.value,""));
 evType?.addEventListener("change", () => syncEvPlayers(evTeam.value, ""));
 evPlayer.addEventListener("change", () => { const p=byId("players",evPlayer.value); if(p) evTeam.value=String(p.team_id); });
+matchForfeit?.addEventListener("change", syncMatchForfeitState);
 
 themeBtn?.addEventListener("click", toggleTheme);
 

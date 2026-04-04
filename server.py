@@ -80,7 +80,7 @@ RESOURCE_CONFIG: dict[str, dict] = {
             "game_number": "int", "phase": "text", "phase_label": "text",
             "round_order": "int", "scheduled_at": "text", "venue": "text",
             "status": "text", "home_team_id": "int?", "away_team_id": "int?",
-            "home_score": "int?", "away_score": "int?", "notes": "text",
+            "home_score": "int?", "away_score": "int?", "forfeit_side": "text", "notes": "text",
             "referees": "text", "mvp_player_id": "int?", "is_featured": "bool",
         },
     },
@@ -155,6 +155,10 @@ def coerce(value, spec: str):
 def phase_label(phase: str) -> str:
     return PHASE_LABELS.get(phase, phase.replace("_", " ").title())
 
+def normalize_forfeit_side(value: str | None) -> str:
+    side = str(value or "").strip().lower()
+    return side if side in ("home", "away") else ""
+
 def rows(cursor) -> list[dict]:
     return [dict(r) for r in cursor.fetchall()]
 
@@ -210,6 +214,7 @@ CREATE TABLE IF NOT EXISTS matches (
     status TEXT NOT NULL DEFAULT 'scheduled',
     home_team_id INTEGER, away_team_id INTEGER,
     home_score INTEGER, away_score INTEGER,
+    forfeit_side TEXT NOT NULL DEFAULT '',
     notes TEXT, referees TEXT,
     mvp_player_id INTEGER, is_featured INTEGER NOT NULL DEFAULT 0,
     FOREIGN KEY (home_team_id) REFERENCES teams(id) ON DELETE SET NULL,
@@ -412,9 +417,15 @@ def ensure_bar_products(conn: sqlite3.Connection) -> None:
         ],
     )
 
+def ensure_match_fields(conn: sqlite3.Connection) -> None:
+    columns = {row["name"] for row in conn.execute("PRAGMA table_info(matches)")}
+    if "forfeit_side" not in columns:
+        conn.execute("ALTER TABLE matches ADD COLUMN forfeit_side TEXT NOT NULL DEFAULT ''")
+
 def init_db() -> None:
     with get_db() as conn:
         conn.executescript(SCHEMA)
+        ensure_match_fields(conn)
         seed_database(conn)
         ensure_bar_products(conn)
         # Always ensure admin password is up-to-date
@@ -460,18 +471,33 @@ def enrich_matches(data: dict) -> list[dict]:
         mc["home_team"] = tid.get(m["home_team_id"])
         mc["away_team"] = tid.get(m["away_team_id"])
         mc["mvp_player"] = pid.get(m["mvp_player_id"])
+        mc["forfeit_side"] = normalize_forfeit_side(m.get("forfeit_side"))
         mc["timeline"] = evm.get(m["id"], [])
         mc["scorers"] = [x for x in mc["timeline"] if x["event_type"] == "goal"]
+        mc["forfeit_note"] = ""
         mc["home_fouls"] = 0
         mc["away_fouls"] = 0
         if mc["home_team_id"] and mc["away_team_id"]:
-            dh = sum(1 for x in mc["scorers"] if x["team_id"] == mc["home_team_id"])
-            da = sum(1 for x in mc["scorers"] if x["team_id"] == mc["away_team_id"])
+            home_name = mc["home_team"]["name"] if mc["home_team"] else "Equipa A"
+            away_name = mc["away_team"]["name"] if mc["away_team"] else "Equipa B"
             mc["home_fouls"] = sum(1 for x in mc["timeline"] if x["event_type"] == "foul" and x["team_id"] == mc["home_team_id"])
             mc["away_fouls"] = sum(1 for x in mc["timeline"] if x["event_type"] == "foul" and x["team_id"] == mc["away_team_id"])
-            if mc["scorers"] or mc["home_score"] is None or mc["away_score"] is None:
-                mc["home_score"] = dh
-                mc["away_score"] = da
+            if mc["forfeit_side"] == "home":
+                mc["scorers"] = []
+                mc["home_score"] = 0
+                mc["away_score"] = 3
+                mc["forfeit_note"] = f"Vitória de {away_name} por 3-0 após desistência de {home_name}."
+            elif mc["forfeit_side"] == "away":
+                mc["scorers"] = []
+                mc["home_score"] = 3
+                mc["away_score"] = 0
+                mc["forfeit_note"] = f"Vitória de {home_name} por 3-0 após desistência de {away_name}."
+            else:
+                dh = sum(1 for x in mc["scorers"] if x["team_id"] == mc["home_team_id"])
+                da = sum(1 for x in mc["scorers"] if x["team_id"] == mc["away_team_id"])
+                if mc["scorers"] or mc["home_score"] is None or mc["away_score"] is None:
+                    mc["home_score"] = dh
+                    mc["away_score"] = da
         out.append(mc)
     return out
 
@@ -532,10 +558,11 @@ def compute_standings(teams: list[dict], matches: list[dict]) -> list[dict]:
     standings.sort(key=lambda s: s["group"])
     return standings
 
-def compute_scorers(players: list[dict], events: list[dict]) -> list[dict]:
+def compute_scorers(players: list[dict], events: list[dict], matches: list[dict]) -> list[dict]:
+    forfeited = {m["id"] for m in matches if normalize_forfeit_side(m.get("forfeit_side"))}
     g: dict[int, int] = {}
     for e in events:
-        if e["event_type"] == "goal" and e["player_id"]:
+        if e["event_type"] == "goal" and e["player_id"] and e["match_id"] not in forfeited:
             g[e["player_id"]] = g.get(e["player_id"], 0) + 1
     out = []
     for p in players:
@@ -572,7 +599,7 @@ def public_payload(conn: sqlite3.Connection) -> dict:
     d = fetch_all(conn)
     em = enrich_matches(d)
     return dict(settings=d["settings"], summary=summary(em), standings=compute_standings(d["teams"], em),
-                matches=em, bracket=build_bracket(em), top_scorers=compute_scorers(d["players"], d["events"]),
+                matches=em, bracket=build_bracket(em), top_scorers=compute_scorers(d["players"], d["events"], d["matches"]),
                 bar_products=d["bar_products"], announcements=d["announcements"],
                 info_sections=d["info_sections"], teams=d["teams"], updated_at=now_iso())
 
@@ -714,7 +741,7 @@ class Handler(SimpleHTTPRequestHandler):
             out[f] = coerce(payload.get(f), spec)
         return out
 
-    def _prepare(self, conn, resource: str, payload: dict, vals: dict, *, create: bool) -> dict:
+    def _prepare(self, conn, resource: str, payload: dict, vals: dict, *, create: bool, rid: int | None = None) -> dict:
         if resource == "teams":
             if "group_name" in vals and vals["group_name"] in ("A", "B", "C"):
                 vals["group_name"] = f"Grupo {vals['group_name']}"
@@ -727,6 +754,7 @@ class Handler(SimpleHTTPRequestHandler):
             if create and "goals_adjustment" not in vals: vals["goals_adjustment"] = 0
         if resource == "matches":
             phase = str(vals.get("phase") or payload.get("phase") or "group")
+            current = conn.execute("SELECT home_score, away_score, forfeit_side FROM matches WHERE id=?", (rid,)).fetchone() if rid else None
             if create and "game_number" not in vals:
                 vals["game_number"] = conn.execute("SELECT COALESCE(MAX(game_number),0)+1 FROM matches").fetchone()[0]
             if "round_order" not in vals:
@@ -738,6 +766,20 @@ class Handler(SimpleHTTPRequestHandler):
                 r = conn.execute("SELECT venue FROM tournament_settings WHERE id=1").fetchone()
                 vals["venue"] = r["venue"] if r else ""
             if create and "is_featured" not in vals: vals["is_featured"] = 0
+            side = normalize_forfeit_side(vals.get("forfeit_side") if "forfeit_side" in vals else (current["forfeit_side"] if current else ""))
+            if create or "forfeit_side" in vals:
+                vals["forfeit_side"] = side
+            if side == "home":
+                vals["status"] = "completed"
+                vals["home_score"] = 0
+                vals["away_score"] = 3
+            elif side == "away":
+                vals["status"] = "completed"
+                vals["home_score"] = 3
+                vals["away_score"] = 0
+            elif current and normalize_forfeit_side(current["forfeit_side"]) and "forfeit_side" in vals:
+                vals["home_score"] = None
+                vals["away_score"] = None
         if resource == "match-events":
             if str(vals.get("event_type") or payload.get("event_type") or "") == "foul":
                 vals["player_id"] = None
@@ -790,7 +832,7 @@ class Handler(SimpleHTTPRequestHandler):
         vals = self._normalize(cfg["fields"], payload, False)
         try:
             with get_db() as conn:
-                vals = self._prepare(conn, resource, payload, vals, create=False)
+                vals = self._prepare(conn, resource, payload, vals, create=False, rid=rid)
                 if not vals:
                     self._json({"error": "Sem campos para atualizar."}, 400); return
                 sets = ", ".join(f"{c}=?" for c in vals)

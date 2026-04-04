@@ -77,6 +77,11 @@
                                 </select></label>
                                 <label><span>Equipa A</span><select name="home_team_id" id="match-home" required></select></label>
                                 <label><span>Equipa B</span><select name="away_team_id" id="match-away" required></select></label>
+                                <label class="span-2"><span>Desistência</span><select name="forfeit_side">
+                                    <option value="">Sem desistência</option>
+                                    <option value="home">Equipa A desistiu (0-3)</option>
+                                    <option value="away">Equipa B desistiu (3-0)</option>
+                                </select></label>
                                 <label class="span-2"><span>Data e hora</span><input name="scheduled_at" type="datetime-local" required></label>
                                 <div class="form-actions span-2">
                                     <button type="submit">Guardar jogo</button>
@@ -238,6 +243,6 @@
     </div>
 
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-    <script src="/static/js/admin.js?v=12"></script>
+    <script src="/static/js/admin.js?v=13"></script>
 </body>
 </html>

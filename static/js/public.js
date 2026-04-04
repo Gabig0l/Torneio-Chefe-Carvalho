@@ -106,6 +106,7 @@ function fixtureRow(m, done) {
         <div class="fixture-row__main">
             <div class="fixture-row__top"><span class="fixture-row__label">${esc(m.game_label||`Jogo ${m.game_number||"-"}`)}</span>${done?`<strong class="fixture-row__result">${esc(sc(m.home_score))} - ${esc(sc(m.away_score))}</strong>`:statusChip(m.status)}</div>
             <div class="fixture-row__phase">${esc(m.phase_title||m.phase_label)}</div>
+            ${m.forfeit_note?`<p class="status-description">${esc(m.forfeit_note)}</p>`:""}
             <div class="fixture-row__teams"><span class="fixture-row__team">${teamLogo(m.home_team)}${esc(teamName(m.home_team))}</span><span class="fixture-row__team">${teamLogo(m.away_team)}${esc(teamName(m.away_team))}</span></div>
         </div>
         <div class="fixture-row__side"><strong>${esc(fmtDT(m.scheduled_at))}</strong></div>
@@ -279,7 +280,7 @@ function openModal(id, trigger) {
             <span class="md-event__min">${evIcon(ev.event_type)} ${ev.minute != null ? ev.minute + "'" : ""}</span>
             ${!isHome ? `<span class="md-event__text">${esc(ev.player_name || ev.team_name || "?")} <em>${esc(evLabel(ev.event_type))}</em></span>` : '<span class="md-event__text"></span>'}
         </div>`;
-    }).join("") : '<div class="empty-state">Sem golos ou cartões registados.</div>';
+    }).join("") : `<div class="empty-state">${esc(m.forfeit_note ? "Jogo resolvido por desistência." : "Sem golos ou cartões registados.")}</div>`;
 
     modalBody.innerHTML = `
         <div class="md-header">
@@ -305,6 +306,7 @@ function openModal(id, trigger) {
 
         <div class="md-info">
             <span>📅 ${esc(fmtDT(m.scheduled_at))}</span>
+            ${m.forfeit_note ? `<span>🚩 ${esc(m.forfeit_note)}</span>` : ""}
         </div>
 
         <div class="md-stats" aria-label="Faltas por equipa">
