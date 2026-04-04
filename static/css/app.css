@@ -404,6 +404,10 @@ img{max-width:100%;height:auto}
 :root[data-theme="dark"] .bar-item{border-color:#43586c;color:var(--text)}
 :root[data-theme="dark"] .live-zone{background:linear-gradient(180deg,rgba(25,35,46,.98),rgba(20,28,36,.98));border-color:rgba(240,100,87,.3)}
 :root[data-theme="dark"] .mini-bracket__match{background:var(--paper)}
+:root[data-theme="dark"] #sp-scorers .card h3,
+:root[data-theme="dark"] .scorer-table th,
+:root[data-theme="dark"] .scorer-table td,
+:root[data-theme="dark"] .scorer-table td strong{color:#fff}
 :root[data-theme="dark"] .qualified-row td{background:rgba(91,194,140,.12)}
 :root[data-theme="dark"] .promo-card{background:linear-gradient(180deg,#1f1815,#261d19)!important}
 :root[data-theme="dark"] .empty-state{border-color:#4a5f72}
