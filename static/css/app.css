@@ -179,6 +179,11 @@ img{max-width:100%;height:auto}
 .standing-card__header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 18px 14px;border-bottom:1px solid var(--line-soft)}
 .standing-kicker{display:inline-flex;margin-bottom:8px;color:var(--muted);font-size:.82rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 .standing-note{color:var(--muted);font-size:.92rem;font-weight:700}
+.standings-legend{display:grid;gap:10px;padding:14px 16px;border:2px solid rgba(223,198,186,.72)!important;border-radius:22px;background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04)}
+.standings-legend__item{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:700}
+.standings-legend__swatch{display:inline-flex;flex:0 0 auto;width:18px;height:18px;border-radius:7px;border:1px solid rgba(67,28,19,.12)}
+.standings-legend__swatch--qualified{background:rgba(21,93,59,.18)}
+.standings-legend__swatch--default{background:rgba(33,93,154,.16)}
 
 .table-wrap{overflow-x:auto;background:rgba(255,250,246,.66)!important;backdrop-filter:blur(14px) saturate(1.04)}
 .standings-table{width:100%;border-collapse:collapse;table-layout:auto}
@@ -410,6 +415,11 @@ img{max-width:100%;height:auto}
 :root[data-theme="dark"] .md-scoreboard--live{border-color:rgba(240,100,87,.35)}
 :root[data-theme="dark"] .md-stat{background:rgba(27,42,55,.8);border-color:#324556}
 :root[data-theme="dark"] .md-stat__value{color:#eef4fb}
+:root[data-theme="dark"] .standings-legend{background:linear-gradient(180deg,#1f1815,#261d19)!important;border-color:#4b3a33!important}
+:root[data-theme="dark"] .standings-legend__item{color:#cdd8e3}
+:root[data-theme="dark"] .standings-legend__swatch{border-color:#324556}
+:root[data-theme="dark"] .standings-legend__swatch--qualified{background:rgba(91,194,140,.22)}
+:root[data-theme="dark"] .standings-legend__swatch--default{background:rgba(124,183,255,.18)}
 :root[data-theme="dark"] .md-event{border-bottom-color:#2a3a4a}
 :root[data-theme="dark"] .md-section__title{color:#7cb7ff;border-bottom-color:#2a3a4a}
 :root[data-theme="dark"] .footer__legal{color:rgba(255,233,225,.84)}

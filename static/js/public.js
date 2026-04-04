@@ -136,7 +136,12 @@ function renderMatches() {
 }
 
 function renderGroupStandings() {
-    $("#group-standings").innerHTML = state.data.standings.map(g => `
+    const legend = `
+        <article class="standings-legend" aria-label="Legenda das classificações">
+            <div class="standings-legend__item"><span class="standings-legend__swatch standings-legend__swatch--qualified" aria-hidden="true"></span><span>Verde: apuradas para os quartos de final.</span></div>
+            <div class="standings-legend__item"><span class="standings-legend__swatch standings-legend__swatch--default" aria-hidden="true"></span><span>Restantes equipas: não seguem em frente.</span></div>
+        </article>`;
+    $("#group-standings").innerHTML = legend + state.data.standings.map(g => `
         <article class="standing-card">
             <div class="standing-card__header"><div><span class="standing-kicker">Fase de grupos</span><h3>${esc(g.group)}</h3></div></div>
             <div class="table-wrap"><table class="standings-table"><caption class="sr-only">Tabela do ${esc(g.group)}</caption>
